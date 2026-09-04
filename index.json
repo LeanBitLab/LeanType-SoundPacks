@@ -1,0 +1,125 @@
+{
+  "schemaVersion": 1,
+  "packs": [
+    {
+      "id": "dev.leantype.sounds.arcade_8bit",
+      "name": "8-Bit Retro Arcade",
+      "summary": "Nostalgic chiptune square-wave gaming blips and chirps.",
+      "author": "LeanType Sound Lab",
+      "license": "CC0-1.0",
+      "versionCode": 1,
+      "versionName": "1.0.0",
+      "minAppVersionCode": 1,
+      "tags": [
+        "gaming",
+        "8bit",
+        "retro"
+      ],
+      "file": "arcade_8bit.zip",
+      "sha256": "c88f6136acc9fca8369a87ba89c4638acc7c0fa7a574f9732c30a44ab99542ef",
+      "sizeBytes": 19746,
+      "downloadUrl": "https://raw.githubusercontent.com/LeanBitLab/leantype-soundpacks/main/dist/arcade_8bit.zip",
+      "previewFile": "audio/keypress_default_1.ogg"
+    },
+    {
+      "id": "dev.leantype.sounds.box_jade_clicky",
+      "name": "Kailh Box Jade Clicky",
+      "summary": "Ultra-crisp high-pitched tactile click bar switches.",
+      "author": "LeanType Sound Lab",
+      "license": "CC0-1.0",
+      "versionCode": 1,
+      "versionName": "1.0.0",
+      "minAppVersionCode": 1,
+      "tags": [
+        "mechanical",
+        "clicky",
+        "tactile"
+      ],
+      "file": "box_jade_clicky.zip",
+      "sha256": "05b1856d755a369507f3437847e67907448677d301568b65ade5a8b68e4fa7e7",
+      "sizeBytes": 18675,
+      "downloadUrl": "https://raw.githubusercontent.com/LeanBitLab/leantype-soundpacks/main/dist/box_jade_clicky.zip",
+      "previewFile": "audio/keypress_default_1.ogg"
+    },
+    {
+      "id": "dev.leantype.sounds.bubble_pop",
+      "name": "Water Bubble / Pop",
+      "summary": "Satisfying soft liquid bubble pop feedback.",
+      "author": "LeanType Sound Lab",
+      "license": "CC0-1.0",
+      "versionCode": 1,
+      "versionName": "1.0.0",
+      "minAppVersionCode": 1,
+      "tags": [
+        "bubble",
+        "pop",
+        "soft"
+      ],
+      "file": "bubble_pop.zip",
+      "sha256": "a0cefa21d82d6761117f02c5fa4ed9d797eb8136f2f8aed1c4af592351c21243",
+      "sizeBytes": 16920,
+      "downloadUrl": "https://raw.githubusercontent.com/LeanBitLab/leantype-soundpacks/main/dist/bubble_pop.zip",
+      "previewFile": "audio/keypress_default_1.ogg"
+    },
+    {
+      "id": "dev.leantype.sounds.mechanical_thock",
+      "name": "Mechanical Thock",
+      "summary": "Deep, lubricated switch thock with heavy spacebar clack.",
+      "author": "LeanType Sound Lab",
+      "license": "CC0-1.0",
+      "versionCode": 1,
+      "versionName": "1.0.0",
+      "minAppVersionCode": 1,
+      "tags": [
+        "mechanical",
+        "thock",
+        "keyboard"
+      ],
+      "file": "mechanical_thock.zip",
+      "sha256": "a880255458bb7fb3e4ac854c065f326acf115accbe7e1905c9d2738477c4ce67",
+      "sizeBytes": 18180,
+      "downloadUrl": "https://raw.githubusercontent.com/LeanBitLab/leantype-soundpacks/main/dist/mechanical_thock.zip",
+      "previewFile": "audio/keypress_default_1.ogg"
+    },
+    {
+      "id": "dev.leantype.sounds.vintage_typewriter",
+      "name": "Vintage Royal Typewriter",
+      "summary": "Classic cast-iron hammer strike with newline carriage chime on Enter.",
+      "author": "LeanType Sound Lab",
+      "license": "CC0-1.0",
+      "versionCode": 1,
+      "versionName": "1.0.0",
+      "minAppVersionCode": 1,
+      "tags": [
+        "retro",
+        "typewriter",
+        "vintage"
+      ],
+      "file": "vintage_typewriter.zip",
+      "sha256": "ac7049c116811809f1db81ec3158a5f3ee7cb4dac7307ab773bc3dfff43e1e6e",
+      "sizeBytes": 19910,
+      "downloadUrl": "https://raw.githubusercontent.com/LeanBitLab/leantype-soundpacks/main/dist/vintage_typewriter.zip",
+      "previewFile": "audio/keypress_default_1.ogg"
+    },
+    {
+      "id": "dev.leantype.sounds.woodblock_teak",
+      "name": "Teak Woodblock Minimal",
+      "summary": "Natural acoustic wooden mallet resonance.",
+      "author": "LeanType Sound Lab",
+      "license": "CC0-1.0",
+      "versionCode": 1,
+      "versionName": "1.0.0",
+      "minAppVersionCode": 1,
+      "tags": [
+        "wood",
+        "organic",
+        "minimal"
+      ],
+      "file": "woodblock_teak.zip",
+      "sha256": "2fd11fda47c6a33ac3b2988b48237817add46fc3d8ad22ec1180fc118fb032dc",
+      "sizeBytes": 18335,
+      "downloadUrl": "https://raw.githubusercontent.com/LeanBitLab/leantype-soundpacks/main/dist/woodblock_teak.zip",
+      "previewFile": "audio/keypress_default_1.ogg"
+    }
+  ]
+}
