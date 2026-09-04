@@ -129,6 +129,59 @@ If you only have a single `.ogg`, `.wav`, or `.mp3` audio clip (like a single cl
 
 ---
 
+### Method 3: Procedural Python Synthesis (Algorithmic Modeling)
+
+You can synthesize sound packs from scratch using pure mathematics, digital signal processing (DSP), and physical modeling in Python without needing physical audio recordings.
+
+#### 1. Setup Dependencies
+```bash
+pip install numpy scipy soundfile
+```
+
+#### 2. Write Your Custom Sound Synthesis Builder
+In [`tools/generate_all_soundpacks.py`](tools/generate_all_soundpacks.py), define a sound builder function using the built-in DSP primitives:
+- `tone(duration, f0, f1, wave='sine'|'triangle'|'square')`: Generates frequency sweeps and waveforms.
+- `decay_env(duration, tau, attack_s)`: Generates exponential acoustic decay envelopes.
+- `_modal_layers(duration, base_freq, ratios, gains, taus)`: Additive acoustic resonance model.
+- `_ks_pluck(rng, freq, duration, brightness)`: Karplus-Strong physical plucked-string model.
+- `lowpass()`, `highpass()`, `bandpass()`: Digital Butterworth / SOS filtering.
+- `finalize(audio, target_db=-2.0)`: Peak normalizes (-2 dBFS), removes DC bias, and applies micro anti-pop fades.
+
+Example:
+```python
+def build_custom_clack(rng: np.random.Generator) -> Dict[str, Dict]:
+    def hit(freq: float, duration: float) -> np.ndarray:
+        body = tone(duration, freq, freq * 0.85) * decay_env(duration, 0.02)
+        click = bandpass(noise(rng, 0.005), 1500.0, 4500.0) * decay_env(0.005, 0.002)
+        return finalize(mix([(body, 0.8), (click, 0.4)]))
+
+    return {
+        "keypress.default": ev([hit(300.0, 0.06), hit(320.0, 0.06)], "random"),
+        "keypress.space": ev([hit(150.0, 0.10)], "single"),
+        "keypress.delete": ev([hit(500.0, 0.04)], "single"),
+        "keypress.return": ev([hit(220.0, 0.08)], "single"),
+    }
+```
+
+#### 3. Register and Run
+Add your `PackSpec` to the `PACKS` list:
+```python
+PackSpec(
+    slug="my-custom-sound",
+    name="My Custom Sound",
+    summary="Algorithmic mechanical clack.",
+    tags=["custom", "procedural"],
+    builder=build_custom_clack,
+)
+```
+
+Generate the sound pack `.zip`, previews, and `index.json`:
+```bash
+python tools/generate_all_soundpacks.py --base-url https://raw.githubusercontent.com/YOUR_USER/LeanType-SoundPacks/main/dist
+```
+
+---
+
 ## 📲 How to Import into LeanType on Your Device
 
 1. Transfer your `.zip` (or `.ogg` / `.wav` / `.mp3`) file to your phone (via USB, Downloads, Telegram, Google Drive, etc.).
