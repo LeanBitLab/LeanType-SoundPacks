@@ -8,12 +8,16 @@ Official sound packs repository and creator guide for [LeanType Keyboard](https:
 
 | Pack Name | ID | Description |
 |---|---|---|
-| **Mechanical Thock** | `dev.leantype.sounds.mechanical_thock` | Deep, lubricated switch thock with heavy spacebar clack |
-| **Kailh Box Jade Clicky** | `dev.leantype.sounds.box_jade_clicky` | Ultra-crisp high-pitched tactile click bar switches |
-| **Vintage Royal Typewriter** | `dev.leantype.sounds.vintage_typewriter` | Cast-iron hammer strike with newline carriage chime on Enter |
-| **8-Bit Retro Arcade** | `dev.leantype.sounds.arcade_8bit` | Nostalgic chiptune square-wave gaming blips and chirps |
-| **Water Bubble / Pop** | `dev.leantype.sounds.bubble_pop` | Satisfying soft liquid bubble pop feedback |
-| **Teak Woodblock Minimal** | `dev.leantype.sounds.woodblock_teak` | Natural acoustic wooden mallet resonance |
+| **Gateron Oil King Thock** | `dev.leantype.sounds.gateron-oil-king-thock` | Deep, warm, lubricated mechanical switch with heavy spacebar clack |
+| **Kailh Box Jade Clicky** | `dev.leantype.sounds.kailh-box-jade-clicky` | High-pitch crisp tactile click-bar mechanism |
+| **Holy Panda Tactile** | `dev.leantype.sounds.holy-panda-tactile` | Snappy tactile bump with distinct bottom-out pop |
+| **IBM Model M Beamspring** | `dev.leantype.sounds.ibm-model-m-beamspring` | Heavy vintage solenoid click with subtle metallic resonance |
+| **Classic 1930s Royal Typewriter** | `dev.leantype.sounds.classic-1930s-royal-typewriter` | Metal hammer striker, ratchet spacebar, and carriage-return chime |
+| **Creamy Linear Jelly** | `dev.leantype.sounds.creamy-linear-jelly` | Muted, ultra-smooth dampened linear switch sound |
+| **8-Bit Chiptune Arcade** | `dev.leantype.sounds.8-bit-chiptune-arcade` | Retro square-wave arcade blips and chirps |
+| **Minimalistic Ceramic / Glass Marble** | `dev.leantype.sounds.minimalistic-ceramic-glass-marble` | Smooth polished mineral tap with glassy overtones |
+| **Water Bubble Pop** | `dev.leantype.sounds.water-bubble-pop` | Resonant liquid droplet burst with soft pop |
+| **Acoustic Teak Woodblock** | `dev.leantype.sounds.acoustic-teak-woodblock` | Natural acoustic percussion mallet tap |
 
 ---
 
@@ -112,8 +116,8 @@ python tools/package_pack.py packs/my_sound_pack dist/my_sound_pack.zip
 If you only have a single `.ogg`, `.wav`, or `.mp3` audio clip (like a single click or pop):
 1. Transfer the audio file to your phone.
 2. In LeanType:
-   - Open **Settings** → **Preferences** → **Keypress sound profile**.
-   - Tap **Import pack**.
+   - Open **Settings** → **Plugins & Capabilities** → **Keypress Audio & Sound Packs**.
+   - Tap **Sound Style** → **Import .zip**.
    - Select your `.ogg`, `.wav`, or `.mp3` file.
 3. LeanType will automatically package it as a custom profile with instant playback!
 
@@ -123,8 +127,8 @@ If you only have a single `.ogg`, `.wav`, or `.mp3` audio clip (like a single cl
 
 1. Transfer your `.zip` (or `.ogg` / `.wav` / `.mp3`) file to your phone (via USB, Downloads, Telegram, Google Drive, etc.).
 2. Open **LeanType Settings**.
-3. Go to **Preferences** → **Keypress sound profile**.
-4. Tap the **Import pack** button at the top right.
+3. Go to **Plugins & Capabilities** → **Keypress Audio & Sound Packs**.
+4. Tap **Sound Style** → **Import .zip**.
 5. Select your `.zip` or audio file using the system file picker.
 6. LeanType will validate, install, activate, and preview your sound pack immediately!
 
