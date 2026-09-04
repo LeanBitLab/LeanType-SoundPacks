@@ -8,22 +8,22 @@ Official sound packs repository and creator guide for [LeanType Keyboard](https:
 
 | Pack Name | ID | Description |
 |---|---|---|
-| **Gateron Oil King Thock** | `dev.leantype.sounds.gateron-oil-king-thock` | Deep, warm, lubricated mechanical switch with heavy spacebar clack |
-| **Kailh Box Jade Clicky** | `dev.leantype.sounds.kailh-box-jade-clicky` | High-pitch crisp tactile click-bar mechanism |
-| **Holy Panda Tactile** | `dev.leantype.sounds.holy-panda-tactile` | Snappy tactile bump with distinct bottom-out pop |
-| **IBM Model M Beamspring** | `dev.leantype.sounds.ibm-model-m-beamspring` | Heavy vintage solenoid click with subtle metallic resonance |
-| **Classic 1930s Royal Typewriter** | `dev.leantype.sounds.classic-1930s-royal-typewriter` | Metal hammer striker, ratchet spacebar, and carriage-return chime |
-| **Creamy Linear Jelly** | `dev.leantype.sounds.creamy-linear-jelly` | Muted, ultra-smooth dampened linear switch sound |
-| **8-Bit Chiptune Arcade** | `dev.leantype.sounds.8-bit-chiptune-arcade` | Retro square-wave arcade blips and chirps |
-| **Minimalistic Ceramic / Glass Marble** | `dev.leantype.sounds.minimalistic-ceramic-glass-marble` | Smooth polished mineral tap with glassy overtones |
-| **Water Bubble Pop** | `dev.leantype.sounds.water-bubble-pop` | Resonant liquid droplet burst with soft pop |
-| **Acoustic Teak Woodblock** | `dev.leantype.sounds.acoustic-teak-woodblock` | Natural acoustic percussion mallet tap |
-| **Acoustic Grand Piano** | `dev.leantype.sounds.grand-piano` | Felt hammer strike with warm steel string resonance |
-| **Nylon Acoustic Guitar** | `dev.leantype.sounds.nylon-guitar` | Warm physical-model plucked string with wooden body resonance |
-| **Kerala Chenda Percussion** | `dev.leantype.sounds.kerala-chenda` | Sharp cane stick strike, rim crack, and deep resonant drum body |
-| **Carnatic Mridangam** | `dev.leantype.sounds.carnatic-mridangam` | Crisp harmonic ring with deep pitch-bending bass resonance |
-| **Kalimba Thumb Piano** | `dev.leantype.sounds.kalimba-tines` | Bell-like steel tines with hollow gourd chamber resonance |
-| **Orchestral Pizzicato** | `dev.leantype.sounds.orchestral-pizzicato` | Fast finger-plucked string with acoustic chamber decay |
+| **Deep Thock** | `dev.leantype.sounds.thock` | Deep lubricated switch clack |
+| **Crisp Click** | `dev.leantype.sounds.clicky` | High-pitched sharp click |
+| **Tactile Pop** | `dev.leantype.sounds.tactile` | Snappy tactile bump and pop |
+| **Mechanical Click** | `dev.leantype.sounds.mechanical` | Retro mechanical spring click |
+| **Typewriter** | `dev.leantype.sounds.typewriter` | Vintage carriage and chime |
+| **Creamy Linear** | `dev.leantype.sounds.creamy` | Soft dampened linear tap |
+| **8-Bit Chiptune** | `dev.leantype.sounds.chiptune` | Retro square-wave arcade blips |
+| **Glass Marble** | `dev.leantype.sounds.glass` | Polished mineral tap |
+| **Bubble Pop** | `dev.leantype.sounds.bubble` | Soft liquid droplet burst |
+| **Woodblock** | `dev.leantype.sounds.woodblock` | Acoustic wooden mallet tap |
+| **Piano** | `dev.leantype.sounds.piano` | Warm harmonic key strike |
+| **Acoustic Pluck** | `dev.leantype.sounds.acoustic-pluck` | Plucked nylon string tone |
+| **Folk Drum** | `dev.leantype.sounds.folk-drum` | High-tension rim and drum hit |
+| **Resonant Drum** | `dev.leantype.sounds.resonant-drum` | Deep pitch-bending drum tap |
+| **Kalimba** | `dev.leantype.sounds.kalimba` | Plucked metal tines |
+| **Pizzicato** | `dev.leantype.sounds.pizzicato` | Short finger-plucked string |
 
 ---
 

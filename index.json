@@ -3,9 +3,9 @@
   "packs": [
     {
       "schemaVersion": 1,
-      "id": "dev.leantype.sounds.gateron-oil-king-thock",
-      "name": "Gateron Oil King Thock",
-      "summary": "Deep, warm, lubricated mechanical switch with heavy spacebar clack.",
+      "id": "dev.leantype.sounds.thock",
+      "name": "Deep Thock",
+      "summary": "Deep lubricated switch clack.",
       "versionCode": 1,
       "versionName": "1.0.0",
       "author": "LeanType Sound Lab",
@@ -16,20 +16,19 @@
       "tags": [
         "mechanical",
         "thock",
-        "linear",
         "deep"
       ],
-      "file": "gateron-oil-king-thock.zip",
-      "sha256": "a7edfcc12a498f42bff2cdc2ae25b4856e1b75a818b6a8ce94ee658d9956ee6c",
-      "sizeBytes": 27970,
-      "downloadUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/gateron-oil-king-thock.zip",
-      "previewUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/previews/gateron-oil-king-thock_preview.ogg"
+      "file": "thock.zip",
+      "sha256": "4a84a648bf20ecee19ae5673093a9dccf4bb306363d8de4fb169bd96f5d65c5f",
+      "sizeBytes": 27916,
+      "downloadUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/thock.zip",
+      "previewUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/previews/thock_preview.ogg"
     },
     {
       "schemaVersion": 1,
-      "id": "dev.leantype.sounds.kailh-box-jade-clicky",
-      "name": "Kailh Box Jade Clicky",
-      "summary": "High-pitch crisp tactile click-bar mechanism.",
+      "id": "dev.leantype.sounds.clicky",
+      "name": "Crisp Click",
+      "summary": "High-pitched sharp click.",
       "versionCode": 1,
       "versionName": "1.0.0",
       "author": "LeanType Sound Lab",
@@ -38,22 +37,21 @@
       "defaultMasterVolume": 0.8,
       "preview": "audio/keypress_default_1.ogg",
       "tags": [
-        "mechanical",
         "clicky",
         "tactile",
         "bright"
       ],
-      "file": "kailh-box-jade-clicky.zip",
-      "sha256": "3a8f5ce9b1f40be8b8fd7aafd7f60e6749d27c3d2a14e6645e8308fa7f652f0d",
-      "sizeBytes": 29828,
-      "downloadUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/kailh-box-jade-clicky.zip",
-      "previewUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/previews/kailh-box-jade-clicky_preview.ogg"
+      "file": "clicky.zip",
+      "sha256": "286c73048e3df7d8b90af9b644aa4f014a1fa3cfbc908d7511e49a3c52173bce",
+      "sizeBytes": 29851,
+      "downloadUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/clicky.zip",
+      "previewUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/previews/clicky_preview.ogg"
     },
     {
       "schemaVersion": 1,
-      "id": "dev.leantype.sounds.holy-panda-tactile",
-      "name": "Holy Panda Tactile",
-      "summary": "Snappy tactile bump with distinct bottom-out pop.",
+      "id": "dev.leantype.sounds.tactile",
+      "name": "Tactile Pop",
+      "summary": "Snappy tactile bump and pop.",
       "versionCode": 1,
       "versionName": "1.0.0",
       "author": "LeanType Sound Lab",
@@ -62,21 +60,20 @@
       "defaultMasterVolume": 0.85,
       "preview": "audio/keypress_default_1.ogg",
       "tags": [
-        "mechanical",
         "tactile",
         "snappy"
       ],
-      "file": "holy-panda-tactile.zip",
-      "sha256": "b0b2ee5dd25a3e5bb965c152bf64b160984047599db5b7859cde2f1e9d934648",
-      "sizeBytes": 29763,
-      "downloadUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/holy-panda-tactile.zip",
-      "previewUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/previews/holy-panda-tactile_preview.ogg"
+      "file": "tactile.zip",
+      "sha256": "ab528e419a7b920cfe2c8b71af8ef1816d684beb51567b7ba4a02699480076f1",
+      "sizeBytes": 29665,
+      "downloadUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/tactile.zip",
+      "previewUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/previews/tactile_preview.ogg"
     },
     {
       "schemaVersion": 1,
-      "id": "dev.leantype.sounds.ibm-model-m-beamspring",
-      "name": "IBM Model M Beamspring",
-      "summary": "Heavy vintage solenoid click with subtle metallic resonance.",
+      "id": "dev.leantype.sounds.mechanical",
+      "name": "Mechanical Click",
+      "summary": "Retro mechanical spring click.",
       "versionCode": 1,
       "versionName": "1.0.0",
       "author": "LeanType Sound Lab",
@@ -86,21 +83,20 @@
       "preview": "audio/keypress_default_1.ogg",
       "tags": [
         "mechanical",
-        "buckling-spring",
-        "vintage",
-        "metallic"
+        "retro",
+        "click"
       ],
-      "file": "ibm-model-m-beamspring.zip",
-      "sha256": "b9e8cb0db21ec06aee806be0e419afa5206d7710f59b367994187a72a6fc280e",
-      "sizeBytes": 33081,
-      "downloadUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/ibm-model-m-beamspring.zip",
-      "previewUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/previews/ibm-model-m-beamspring_preview.ogg"
+      "file": "mechanical.zip",
+      "sha256": "f0e907a1ea8d20b44f8f898ae2ec83d285eaec759fe035fa60412fa7a24f0966",
+      "sizeBytes": 33198,
+      "downloadUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/mechanical.zip",
+      "previewUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/previews/mechanical_preview.ogg"
     },
     {
       "schemaVersion": 1,
-      "id": "dev.leantype.sounds.classic-1930s-royal-typewriter",
-      "name": "Classic 1930s Royal Typewriter",
-      "summary": "Metal hammer striker, ratchet spacebar, and carriage-return chime.",
+      "id": "dev.leantype.sounds.typewriter",
+      "name": "Typewriter",
+      "summary": "Vintage carriage and chime.",
       "versionCode": 1,
       "versionName": "1.0.0",
       "author": "LeanType Sound Lab",
@@ -111,20 +107,19 @@
       "tags": [
         "typewriter",
         "vintage",
-        "mechanical",
         "chime"
       ],
-      "file": "classic-1930s-royal-typewriter.zip",
-      "sha256": "1c1d2fe59fb806d6040373a47d53e47562644b01b88f7709ff6868680e0e886b",
-      "sizeBytes": 30978,
-      "downloadUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/classic-1930s-royal-typewriter.zip",
-      "previewUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/previews/classic-1930s-royal-typewriter_preview.ogg"
+      "file": "typewriter.zip",
+      "sha256": "9455db477f96dbf96e1651ce6a039d9fe6eee923eaa20d33ab9d58cdec872cd2",
+      "sizeBytes": 30753,
+      "downloadUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/typewriter.zip",
+      "previewUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/previews/typewriter_preview.ogg"
     },
     {
       "schemaVersion": 1,
-      "id": "dev.leantype.sounds.creamy-linear-jelly",
-      "name": "Creamy Linear Jelly",
-      "summary": "Muted, ultra-smooth dampened linear switch sound.",
+      "id": "dev.leantype.sounds.creamy",
+      "name": "Creamy Linear",
+      "summary": "Soft dampened linear tap.",
       "versionCode": 1,
       "versionName": "1.0.0",
       "author": "LeanType Sound Lab",
@@ -135,20 +130,19 @@
       "tags": [
         "linear",
         "muted",
-        "soft",
-        "creamy"
+        "soft"
       ],
-      "file": "creamy-linear-jelly.zip",
-      "sha256": "eb784c708589451212ca6794ca9b24267257f066a322ee88c23a8ecb6b249be9",
-      "sizeBytes": 27046,
-      "downloadUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/creamy-linear-jelly.zip",
-      "previewUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/previews/creamy-linear-jelly_preview.ogg"
+      "file": "creamy.zip",
+      "sha256": "bceb2b9301e34eae950a1f848bc0687c607cff1bccefc585855386f85b733f17",
+      "sizeBytes": 27118,
+      "downloadUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/creamy.zip",
+      "previewUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/previews/creamy_preview.ogg"
     },
     {
       "schemaVersion": 1,
-      "id": "dev.leantype.sounds.8-bit-chiptune-arcade",
-      "name": "8-Bit Chiptune Arcade",
-      "summary": "Retro square-wave arcade blips and chirps.",
+      "id": "dev.leantype.sounds.chiptune",
+      "name": "8-Bit Chiptune",
+      "summary": "Retro square-wave arcade blips.",
       "versionCode": 1,
       "versionName": "1.0.0",
       "author": "LeanType Sound Lab",
@@ -159,20 +153,19 @@
       "tags": [
         "retro",
         "chiptune",
-        "8-bit",
-        "arcade"
+        "8-bit"
       ],
-      "file": "8-bit-chiptune-arcade.zip",
-      "sha256": "53780f6ef221f9cf9b40459d1e54408f42ed7853c8f5ac23fbafbe12ff9799ea",
-      "sizeBytes": 31552,
-      "downloadUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/8-bit-chiptune-arcade.zip",
-      "previewUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/previews/8-bit-chiptune-arcade_preview.ogg"
+      "file": "chiptune.zip",
+      "sha256": "087446d6bd05ad08445a148caf78e02134e9ac579f1a4065b452cbb9adf18540",
+      "sizeBytes": 31547,
+      "downloadUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/chiptune.zip",
+      "previewUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/previews/chiptune_preview.ogg"
     },
     {
       "schemaVersion": 1,
-      "id": "dev.leantype.sounds.minimalistic-ceramic-glass-marble",
-      "name": "Minimalistic Ceramic / Glass Marble",
-      "summary": "Smooth polished mineral tap with glassy overtones.",
+      "id": "dev.leantype.sounds.glass",
+      "name": "Glass Marble",
+      "summary": "Polished mineral tap.",
       "versionCode": 1,
       "versionName": "1.0.0",
       "author": "LeanType Sound Lab",
@@ -183,20 +176,19 @@
       "tags": [
         "minimal",
         "glass",
-        "ceramic",
         "clean"
       ],
-      "file": "minimalistic-ceramic-glass-marble.zip",
-      "sha256": "8dd9c340ef91eee860390b3ecd988c4a26bd55675ea1b744a3a28edcf71937ba",
-      "sizeBytes": 30010,
-      "downloadUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/minimalistic-ceramic-glass-marble.zip",
-      "previewUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/previews/minimalistic-ceramic-glass-marble_preview.ogg"
+      "file": "glass.zip",
+      "sha256": "32b455d6ef47dc4cdba1dacc398ca826db2fd978cbdd958cb47aafc64f86e655",
+      "sizeBytes": 29952,
+      "downloadUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/glass.zip",
+      "previewUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/previews/glass_preview.ogg"
     },
     {
       "schemaVersion": 1,
-      "id": "dev.leantype.sounds.water-bubble-pop",
-      "name": "Water Bubble Pop",
-      "summary": "Resonant liquid droplet burst with soft pop.",
+      "id": "dev.leantype.sounds.bubble",
+      "name": "Bubble Pop",
+      "summary": "Soft liquid droplet burst.",
       "versionCode": 1,
       "versionName": "1.0.0",
       "author": "LeanType Sound Lab",
@@ -207,20 +199,19 @@
       "tags": [
         "liquid",
         "bubble",
-        "soft",
-        "playful"
+        "soft"
       ],
-      "file": "water-bubble-pop.zip",
-      "sha256": "ce82e3959949d63a27855e7c447c90118293aacc9ec3302a7ebaeba7a4817ede",
-      "sizeBytes": 28451,
-      "downloadUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/water-bubble-pop.zip",
-      "previewUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/previews/water-bubble-pop_preview.ogg"
+      "file": "bubble.zip",
+      "sha256": "f1d39a7c8d249adad142e1286846f92c20ef05630fffea4efa4a86c67f4bac48",
+      "sizeBytes": 28364,
+      "downloadUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/bubble.zip",
+      "previewUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/previews/bubble_preview.ogg"
     },
     {
       "schemaVersion": 1,
-      "id": "dev.leantype.sounds.acoustic-teak-woodblock",
-      "name": "Acoustic Teak Woodblock",
-      "summary": "Natural acoustic percussion mallet tap.",
+      "id": "dev.leantype.sounds.woodblock",
+      "name": "Woodblock",
+      "summary": "Acoustic wooden mallet tap.",
       "versionCode": 1,
       "versionName": "1.0.0",
       "author": "LeanType Sound Lab",
@@ -231,20 +222,19 @@
       "tags": [
         "wood",
         "percussion",
-        "acoustic",
-        "warm"
+        "acoustic"
       ],
-      "file": "acoustic-teak-woodblock.zip",
-      "sha256": "9beba7b237b8b65276d67176cc68d14a584c11f8ef06e37c264a6be7202da95c",
-      "sizeBytes": 29280,
-      "downloadUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/acoustic-teak-woodblock.zip",
-      "previewUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/previews/acoustic-teak-woodblock_preview.ogg"
+      "file": "woodblock.zip",
+      "sha256": "d8fdef0aa781cbdfaa44ff5db0569469128750e74687b12fc4e79c1c6c8e4560",
+      "sizeBytes": 29294,
+      "downloadUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/woodblock.zip",
+      "previewUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/previews/woodblock_preview.ogg"
     },
     {
       "schemaVersion": 1,
-      "id": "dev.leantype.sounds.grand-piano",
-      "name": "Acoustic Grand Piano",
-      "summary": "Felt hammer strike with warm steel string resonance.",
+      "id": "dev.leantype.sounds.piano",
+      "name": "Piano",
+      "summary": "Warm harmonic key strike.",
       "versionCode": 1,
       "versionName": "1.0.0",
       "author": "LeanType Sound Lab",
@@ -257,17 +247,17 @@
         "acoustic",
         "keys"
       ],
-      "file": "grand-piano.zip",
-      "sha256": "c6ef01257f805fd6f328e36a410fe5432c4c2d70e509ba079380849eb42f5ba7",
-      "sizeBytes": 30252,
-      "downloadUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/grand-piano.zip",
-      "previewUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/previews/grand-piano_preview.ogg"
+      "file": "piano.zip",
+      "sha256": "f37f981207aab9d8341ea236f8548e5c214b64cfd5fb31781dd8151b57f49773",
+      "sizeBytes": 30395,
+      "downloadUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/piano.zip",
+      "previewUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/previews/piano_preview.ogg"
     },
     {
       "schemaVersion": 1,
-      "id": "dev.leantype.sounds.nylon-guitar",
-      "name": "Nylon Acoustic Guitar",
-      "summary": "Warm physical-model plucked string with wooden body resonance.",
+      "id": "dev.leantype.sounds.acoustic-pluck",
+      "name": "Acoustic Pluck",
+      "summary": "Plucked nylon string tone.",
       "versionCode": 1,
       "versionName": "1.0.0",
       "author": "LeanType Sound Lab",
@@ -280,17 +270,17 @@
         "strings",
         "pluck"
       ],
-      "file": "nylon-guitar.zip",
-      "sha256": "9925d4d9cfae60af64e9fbac4894ec5de11048fd478d4bd5e3d7fc3e97f8f243",
-      "sizeBytes": 31699,
-      "downloadUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/nylon-guitar.zip",
-      "previewUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/previews/nylon-guitar_preview.ogg"
+      "file": "acoustic-pluck.zip",
+      "sha256": "6ffbee7285bd0a130316adcd84c7a3f52fbdd6f4bb378b3cf45bf2cc70de24ea",
+      "sizeBytes": 31592,
+      "downloadUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/acoustic-pluck.zip",
+      "previewUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/previews/acoustic-pluck_preview.ogg"
     },
     {
       "schemaVersion": 1,
-      "id": "dev.leantype.sounds.kerala-chenda",
-      "name": "Kerala Chenda Percussion",
-      "summary": "Sharp cane stick strike, rim crack, and deep resonant drum body.",
+      "id": "dev.leantype.sounds.folk-drum",
+      "name": "Folk Drum",
+      "summary": "High-tension rim and drum hit.",
       "versionCode": 1,
       "versionName": "1.0.0",
       "author": "LeanType Sound Lab",
@@ -299,22 +289,21 @@
       "defaultMasterVolume": 0.85,
       "preview": "audio/keypress_default_1.ogg",
       "tags": [
-        "chenda",
         "percussion",
         "ethnic",
         "drum"
       ],
-      "file": "kerala-chenda.zip",
-      "sha256": "c3de395ef156079c657d9ef38bae2b7b1f4334d48e704f5361f583e96fa30dba",
-      "sizeBytes": 30196,
-      "downloadUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/kerala-chenda.zip",
-      "previewUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/previews/kerala-chenda_preview.ogg"
+      "file": "folk-drum.zip",
+      "sha256": "bc3d785cd8ec4d1a62d773a3f95c35f63821a5702ea0cb1ee25289a1f62526bf",
+      "sizeBytes": 30264,
+      "downloadUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/folk-drum.zip",
+      "previewUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/previews/folk-drum_preview.ogg"
     },
     {
       "schemaVersion": 1,
-      "id": "dev.leantype.sounds.carnatic-mridangam",
-      "name": "Carnatic Mridangam",
-      "summary": "Crisp harmonic ring with deep pitch-bending bass resonance.",
+      "id": "dev.leantype.sounds.resonant-drum",
+      "name": "Resonant Drum",
+      "summary": "Deep pitch-bending drum tap.",
       "versionCode": 1,
       "versionName": "1.0.0",
       "author": "LeanType Sound Lab",
@@ -323,22 +312,21 @@
       "defaultMasterVolume": 0.85,
       "preview": "audio/keypress_default_1.ogg",
       "tags": [
-        "mridangam",
         "percussion",
         "classical",
-        "indian"
+        "drum"
       ],
-      "file": "carnatic-mridangam.zip",
-      "sha256": "7f2523a9c9c50eb224bcc3408fc65c1a360996e22856d1a25a503bc29b8f476e",
-      "sizeBytes": 30298,
-      "downloadUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/carnatic-mridangam.zip",
-      "previewUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/previews/carnatic-mridangam_preview.ogg"
+      "file": "resonant-drum.zip",
+      "sha256": "61a21b580c802f4015d55799065a276de91ba951776dd89c1d450b7fd149a7b4",
+      "sizeBytes": 30343,
+      "downloadUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/resonant-drum.zip",
+      "previewUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/previews/resonant-drum_preview.ogg"
     },
     {
       "schemaVersion": 1,
-      "id": "dev.leantype.sounds.kalimba-tines",
-      "name": "Kalimba Thumb Piano",
-      "summary": "Bell-like steel tines with hollow gourd chamber resonance.",
+      "id": "dev.leantype.sounds.kalimba",
+      "name": "Kalimba",
+      "summary": "Plucked metal tines.",
       "versionCode": 1,
       "versionName": "1.0.0",
       "author": "LeanType Sound Lab",
@@ -349,20 +337,19 @@
       "tags": [
         "kalimba",
         "metal",
-        "tines",
-        "calm"
+        "tines"
       ],
-      "file": "kalimba-tines.zip",
-      "sha256": "804332aaa11fd739d90c055f72d2ea8fe281a375f1a647594def1121c5895a57",
-      "sizeBytes": 30026,
-      "downloadUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/kalimba-tines.zip",
-      "previewUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/previews/kalimba-tines_preview.ogg"
+      "file": "kalimba.zip",
+      "sha256": "e3bfdd413ac6bfc03971acc85f2148b6d474611c077f0bdf5ef759b665439916",
+      "sizeBytes": 30201,
+      "downloadUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/kalimba.zip",
+      "previewUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/previews/kalimba_preview.ogg"
     },
     {
       "schemaVersion": 1,
-      "id": "dev.leantype.sounds.orchestral-pizzicato",
-      "name": "Orchestral Pizzicato",
-      "summary": "Fast finger-plucked string with acoustic chamber decay.",
+      "id": "dev.leantype.sounds.pizzicato",
+      "name": "Pizzicato",
+      "summary": "Short finger-plucked string.",
       "versionCode": 1,
       "versionName": "1.0.0",
       "author": "LeanType Sound Lab",
@@ -371,16 +358,15 @@
       "defaultMasterVolume": 0.85,
       "preview": "audio/keypress_default_1.ogg",
       "tags": [
-        "orchestra",
         "strings",
         "pizzicato",
-        "violin"
+        "acoustic"
       ],
-      "file": "orchestral-pizzicato.zip",
-      "sha256": "aa1d771db369c12d0314a4c4ed896c04e8be1ad4e06b7ed17d010d8b4c825401",
-      "sizeBytes": 31263,
-      "downloadUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/orchestral-pizzicato.zip",
-      "previewUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/previews/orchestral-pizzicato_preview.ogg"
+      "file": "pizzicato.zip",
+      "sha256": "cae1c3757ddf3c0e238ab70826523e1531f8a260a970b427d7e1f9c569fe75df",
+      "sizeBytes": 31160,
+      "downloadUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/pizzicato.zip",
+      "previewUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/previews/pizzicato_preview.ogg"
     }
   ]
 }
