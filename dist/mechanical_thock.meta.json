@@ -1,0 +1,20 @@
+{
+  "id": "dev.leantype.sounds.mechanical_thock",
+  "name": "Mechanical Thock",
+  "summary": "Deep, lubricated switch thock with heavy spacebar clack.",
+  "author": "LeanType Sound Lab",
+  "license": "CC0-1.0",
+  "versionCode": 1,
+  "versionName": "1.0.0",
+  "minAppVersionCode": 1,
+  "tags": [
+    "mechanical",
+    "thock",
+    "keyboard"
+  ],
+  "file": "mechanical_thock.zip",
+  "sha256": "a880255458bb7fb3e4ac854c065f326acf115accbe7e1905c9d2738477c4ce67",
+  "sizeBytes": 18180,
+  "downloadUrl": "https://raw.githubusercontent.com/LeanBitLab/leantype-soundpacks/main/dist/mechanical_thock.zip",
+  "previewFile": "audio/keypress_default_1.ogg"
+}

@@ -1,0 +1,20 @@
+{
+  "id": "dev.leantype.sounds.vintage_typewriter",
+  "name": "Vintage Royal Typewriter",
+  "summary": "Classic cast-iron hammer strike with newline carriage chime on Enter.",
+  "author": "LeanType Sound Lab",
+  "license": "CC0-1.0",
+  "versionCode": 1,
+  "versionName": "1.0.0",
+  "minAppVersionCode": 1,
+  "tags": [
+    "retro",
+    "typewriter",
+    "vintage"
+  ],
+  "file": "vintage_typewriter.zip",
+  "sha256": "ac7049c116811809f1db81ec3158a5f3ee7cb4dac7307ab773bc3dfff43e1e6e",
+  "sizeBytes": 19910,
+  "downloadUrl": "https://raw.githubusercontent.com/LeanBitLab/leantype-soundpacks/main/dist/vintage_typewriter.zip",
+  "previewFile": "audio/keypress_default_1.ogg"
+}

@@ -4,3 +4,7 @@ __pycache__/
 Thumbs.db
 *.wav
 *.tmp
+
+# Allow dist for sound pack zips
+!dist/
+!dist/**

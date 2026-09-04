@@ -1,0 +1,20 @@
+{
+  "id": "dev.leantype.sounds.box_jade_clicky",
+  "name": "Kailh Box Jade Clicky",
+  "summary": "Ultra-crisp high-pitched tactile click bar switches.",
+  "author": "LeanType Sound Lab",
+  "license": "CC0-1.0",
+  "versionCode": 1,
+  "versionName": "1.0.0",
+  "minAppVersionCode": 1,
+  "tags": [
+    "mechanical",
+    "clicky",
+    "tactile"
+  ],
+  "file": "box_jade_clicky.zip",
+  "sha256": "05b1856d755a369507f3437847e67907448677d301568b65ade5a8b68e4fa7e7",
+  "sizeBytes": 18675,
+  "downloadUrl": "https://raw.githubusercontent.com/LeanBitLab/leantype-soundpacks/main/dist/box_jade_clicky.zip",
+  "previewFile": "audio/keypress_default_1.ogg"
+}
