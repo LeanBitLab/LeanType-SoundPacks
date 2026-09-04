@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "id": "dev.leantype.sounds.starter_pack",
+  "name": "My Custom Sound Pack",
+  "summary": "Custom tactile keyboard sound effects.",
+  "versionCode": 1,
+  "versionName": "1.0.0",
+  "author": "Your Name",
+  "license": "CC0-1.0",
+  "minAppVersionCode": 1,
+  "defaultMasterVolume": 0.85,
+  "preview": "audio/keypress_default_1.ogg",
+  "tags": [
+    "custom",
+    "mechanical"
+  ],
+  "sounds": {
+    "keypress.default": {
+      "files": [
+        "audio/keypress_default_1.ogg",
+        "audio/keypress_default_2.ogg"
+      ],
+      "mode": "random",
+      "volume": 1.0
+    },
+    "keypress.space": {
+      "files": [
+        "audio/space.ogg"
+      ],
+      "mode": "single",
+      "volume": 1.0
+    },
+    "keypress.delete": {
+      "files": [
+        "audio/delete.ogg"
+      ],
+      "mode": "single",
+      "volume": 0.95
+    },
+    "keypress.return": {
+      "files": [
+        "audio/return.ogg"
+      ],
+      "mode": "single",
+      "volume": 0.95
+    }
+  }
+}

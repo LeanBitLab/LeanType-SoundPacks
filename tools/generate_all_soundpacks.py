@@ -9,7 +9,7 @@ import sys
 import wave
 from pathlib import Path
 
-BASE_DIR = Path(__file__).parent.resolve()
+BASE_DIR = Path(__file__).parent.parent.resolve()
 PACKS_DIR = BASE_DIR / "packs"
 DIST_DIR = BASE_DIR / "dist"
 SAMPLE_RATE = 44100
@@ -338,8 +338,6 @@ def main():
 
     # Package all packs into dist/ and generate index.json
     print("\n--- Packaging all packs ---")
-    tools_dir = BASE_DIR / "tools"
-    sys.path.insert(0, str(tools_dir))
     from package_pack import package_pack
     from generate_index import generate_index
 
