@@ -253,155 +253,14 @@ def tone(
     return y
 
 
-# ----------------------------------------------------------------------------
-# Generic sound builders
-# ----------------------------------------------------------------------------
-
-def percussive(
-    rng: np.random.Generator,
-    duration: float,
-    f0: float,
-    f1: float | None = None,
-    wave: str = "sine",
-    tone_gain: float = 0.80,
-    attack_dur: float = 0.006,
-    attack_low: float | None = None,
-    attack_high: float | None = None,
-    attack_gain: float = 0.35,
-    body_low: float | None = None,
-    body_high: float | None = None,
-    body_gain: float = 0.30,
-    lowpass_cutoff: float = 4000.0,
-    highpass_cutoff: float = 35.0,
-    tau: float | None = None,
-) -> np.ndarray:
-    """
-    Generic filtered percussive hit:
-    tone body + transient noise attack + optional resonant noise body.
-    """
-    if f1 is None:
-        f1 = f0 * 0.92
-
-    if tau is None:
-        tau = duration / 4.5
-
-    body_tone = tone(duration, f0, f1, wave=wave) * decay_env(duration, tau)
-    layers: List[Tuple[np.ndarray, float]] = [(body_tone, tone_gain)]
-
-    if attack_gain > 0:
-        attack = noise(rng, attack_dur)
-
-        if attack_low and attack_high:
-            attack = bandpass(attack, attack_low, attack_high)
-        elif attack_high:
-            attack = highpass(attack, attack_high)
-        elif attack_low:
-            attack = lowpass(attack, attack_low)
-
-        attack *= decay_env(attack_dur, max(0.0015, attack_dur / 3.0))
-        layers.append((attack, attack_gain))
-
-    if body_gain > 0 and body_low and body_high:
-        body_noise = noise(rng, duration)
-        body_noise = bandpass(body_noise, body_low, body_high)
-        body_noise *= decay_env(duration, duration / 5.0)
-        layers.append((body_noise, body_gain))
-
-    y = mix(layers)
-
-    if highpass_cutoff > 0:
-        y = highpass(y, highpass_cutoff)
-
-    if lowpass_cutoff > 0:
-        y = lowpass(y, lowpass_cutoff)
-
-    return finalize(y)
-
-
-def metallic(
-    rng: np.random.Generator,
-    duration: float,
-    partials: Tuple[float, ...] = (2300.0, 3200.0, 4300.0, 5600.0),
-    partial_gain: float = 0.16,
-    attack_high: float = 1800.0,
-    attack_gain: float = 0.50,
-    body_low: float = 1800.0,
-    body_high: float = 6500.0,
-    body_gain: float = 0.25,
-    thunk_freq: float = 90.0,
-    thunk_gain: float = 0.35,
-    lowpass_cutoff: float = 9000.0,
-    highpass_cutoff: float = 80.0,
-) -> np.ndarray:
-    """
-    Metallic click with detuned partials, noise burst, and optional low thunk.
-    """
-    layers: List[Tuple[np.ndarray, float]] = []
-
-    for i, freq in enumerate(partials):
-        detune = float(rng.uniform(0.99, 1.01))
-        f = float(freq) * detune
-
-        partial = tone(duration, f, f * 0.985, wave="sine")
-        partial *= decay_env(duration, duration / (3.0 + i * 0.7))
-        layers.append((partial, partial_gain * (0.9 ** i)))
-
-    if attack_gain > 0:
-        attack = noise(rng, 0.008)
-        attack = highpass(attack, attack_high)
-        attack *= decay_env(0.008, 0.003)
-        layers.append((attack, attack_gain))
-
-    if body_gain > 0 and body_low and body_high:
-        body = noise(rng, duration)
-        body = bandpass(body, body_low, body_high)
-        body *= decay_env(duration, duration / 5.0)
-        layers.append((body, body_gain))
-
-    if thunk_freq and thunk_gain > 0:
-        thunk = tone(duration * 0.6, thunk_freq * 1.2, thunk_freq * 0.8, wave="sine")
-        thunk *= decay_env(duration * 0.6, duration / 6.0)
-        layers.append((thunk, thunk_gain))
-
-    y = mix(layers)
-
-    if highpass_cutoff > 0:
-        y = highpass(y, highpass_cutoff)
-
-    if lowpass_cutoff > 0:
-        y = lowpass(y, lowpass_cutoff)
-
-    return finalize(y)
-
-
-def chime(
-    rng: np.random.Generator,
-    duration: float,
-    freqs: Tuple[float, ...] = (1318.0, 1976.0, 2637.0),
-    gain: float = 0.30,
-    attack_click: bool = True,
-) -> np.ndarray:
-    """
-    Small mechanical/bell chime.
-    """
-    layers: List[Tuple[np.ndarray, float]] = []
-
-    for i, freq in enumerate(freqs):
-        partial = tone(duration, float(freq), float(freq) * 0.995, wave="sine")
-        partial *= decay_env(duration, duration / (3.5 + i))
-        layers.append((partial, gain * (0.8 ** i)))
-
-    if attack_click:
-        click = noise(rng, 0.006)
-        click = highpass(click, 2500.0)
-        click *= decay_env(0.006, 0.002)
-        layers.append((click, 0.35))
-
-    y = mix(layers)
-    y = highpass(y, 120.0)
-    y = lowpass(y, 12000.0)
-
-    return finalize(y)
+def ev(arrays: List[np.ndarray], mode: str | None = None, volume: float = 1.0) -> Dict:
+    if mode is None:
+        mode = "single" if len(arrays) == 1 else "random"
+    return {
+        "arrays": arrays,
+        "mode": mode,
+        "volume": float(volume),
+    }
 
 
 def chip_blip(
@@ -410,14 +269,10 @@ def chip_blip(
     f1: float | None = None,
     target_db: float = -3.0,
 ) -> np.ndarray:
-    """
-    Retro square-wave chiptune blip.
-    """
     y = tone(duration, f0, f1, wave="square", curve="linear")
     y *= decay_env(duration, duration / 3.0, attack_s=0.0003)
     y = lowpass(y, 9500.0)
     return finalize(y, target_db=target_db)
-
 
 def chip_sequence(
     notes: List[Tuple[float, float]],
@@ -426,7 +281,6 @@ def chip_sequence(
 ) -> np.ndarray:
     parts = [chip_blip(note_dur, f0, f1) for f0, f1 in notes]
     return finalize(concat(parts, gap_s=gap))
-
 
 def bubble(
     rng: np.random.Generator,
@@ -437,700 +291,17 @@ def bubble(
     high: float = 2600.0,
     pop_gain: float = 0.28,
 ) -> np.ndarray:
-    """
-    Liquid droplet / bubble pop.
-    """
     y = tone(duration, f0, f1, wave="sine", curve="exp")
     y *= decay_env(duration, duration / 3.2)
     y = bandpass(y, low, high)
-
     pop_dur = min(0.009, duration * 0.25)
     pop = noise(rng, pop_dur)
     pop = lowpass(pop, 1800.0)
     pop *= decay_env(pop_dur, 0.003)
-
     y = mix([(y, 0.92), (pop, pop_gain)])
     y = highpass(y, 70.0)
     y = lowpass(y, 9000.0)
-
     return finalize(y)
-
-
-def glass(
-    rng: np.random.Generator,
-    duration: float,
-    base: float,
-    partial_gain: float = 0.30,
-    attack_gain: float = 0.16,
-    body_gain: float = 0.12,
-) -> np.ndarray:
-    """
-    Ceramic/glass marble tap.
-    """
-    partials = (
-        base,
-        base * 2.68,
-        base * 4.05,
-    )
-
-    return metallic(
-        rng,
-        duration,
-        partials=partials,
-        partial_gain=partial_gain,
-        attack_high=3200.0,
-        attack_gain=attack_gain,
-        body_low=base * 0.8,
-        body_high=min(base * 3.5, 15000.0),
-        body_gain=body_gain,
-        thunk_freq=0.0,
-        thunk_gain=0.0,
-        lowpass_cutoff=13000.0,
-        highpass_cutoff=180.0,
-    )
-
-
-def wood(
-    rng: np.random.Generator,
-    duration: float,
-    base: float,
-    brightness: float = 2.2,
-    tone_gain: float = 0.72,
-    res_gain: float = 0.42,
-    attack_gain: float = 0.32,
-    lowpass_cutoff: float = 8500.0,
-    highpass_cutoff: float = 150.0,
-) -> np.ndarray:
-    """
-    Acoustic woodblock mallet tap.
-    """
-    body = tone(duration, base * 1.07, base * 0.92, wave="sine")
-    body *= decay_env(duration, duration / 5.5)
-
-    resonance = noise(rng, duration)
-    resonance = bandpass(
-        resonance,
-        base * 1.3,
-        min(base * brightness, SAMPLE_RATE / 2.0 - 200.0),
-    )
-    resonance *= decay_env(duration, duration / 6.5)
-
-    attack = noise(rng, 0.004)
-    attack = highpass(attack, min(base * 2.0, SAMPLE_RATE / 2.0 - 200.0))
-    attack *= decay_env(0.004, 0.0015)
-
-    y = mix(
-        [
-            (body, tone_gain),
-            (resonance, res_gain),
-            (attack, attack_gain),
-        ]
-    )
-
-    y = highpass(y, highpass_cutoff)
-    y = lowpass(y, lowpass_cutoff)
-
-    return finalize(y)
-
-
-def ev(arrays: List[np.ndarray], mode: str | None = None, volume: float = 1.0) -> Dict:
-    if mode is None:
-        mode = "single" if len(arrays) == 1 else "random"
-
-    return {
-        "arrays": arrays,
-        "mode": mode,
-        "volume": float(volume),
-    }
-
-
-# ----------------------------------------------------------------------------
-# Pack builders
-# ----------------------------------------------------------------------------
-
-def build_gateron_oil_king(rng: np.random.Generator) -> Dict[str, Dict]:
-    def default_variant(i: int) -> np.ndarray:
-        r = child_rng(rng, 10 + i)
-        base = float(r.uniform(68.0, 90.0))
-        duration = float(r.uniform(0.056, 0.074))
-
-        return percussive(
-            r,
-            duration,
-            base * 1.35,
-            base * 0.88,
-            wave="sine",
-            tone_gain=0.82,
-            attack_dur=0.008,
-            attack_low=1400.0,
-            attack_gain=0.38,
-            body_low=170.0,
-            body_high=420.0,
-            body_gain=0.32,
-            lowpass_cutoff=3200.0,
-            highpass_cutoff=36.0,
-        )
-
-    space = percussive(
-        child_rng(rng, 20),
-        0.110,
-        70.0,
-        46.0,
-        wave="sine",
-        tone_gain=0.85,
-        attack_dur=0.010,
-        attack_low=900.0,
-        attack_gain=0.45,
-        body_low=80.0,
-        body_high=320.0,
-        body_gain=0.35,
-        lowpass_cutoff=2400.0,
-        highpass_cutoff=30.0,
-    )
-
-    delete = percussive(
-        child_rng(rng, 21),
-        0.045,
-        125.0,
-        92.0,
-        wave="sine",
-        tone_gain=0.62,
-        attack_dur=0.006,
-        attack_high=800.0,
-        attack_gain=0.35,
-        body_low=180.0,
-        body_high=500.0,
-        body_gain=0.24,
-        lowpass_cutoff=3000.0,
-        highpass_cutoff=55.0,
-    )
-
-    ret = percussive(
-        child_rng(rng, 22),
-        0.095,
-        82.0,
-        58.0,
-        wave="sine",
-        tone_gain=0.80,
-        attack_dur=0.008,
-        attack_high=900.0,
-        attack_gain=0.42,
-        body_low=120.0,
-        body_high=420.0,
-        body_gain=0.30,
-        lowpass_cutoff=2800.0,
-        highpass_cutoff=35.0,
-    )
-
-    shift = percussive(
-        child_rng(rng, 23),
-        0.038,
-        120.0,
-        88.0,
-        wave="sine",
-        tone_gain=0.58,
-        attack_dur=0.005,
-        attack_low=1200.0,
-        attack_gain=0.30,
-        body_low=180.0,
-        body_high=480.0,
-        body_gain=0.20,
-        lowpass_cutoff=3000.0,
-        highpass_cutoff=60.0,
-    )
-
-    symbol = percussive(
-        child_rng(rng, 24),
-        0.052,
-        96.0,
-        66.0,
-        wave="sine",
-        tone_gain=0.70,
-        attack_dur=0.007,
-        attack_high=700.0,
-        attack_gain=0.38,
-        body_low=140.0,
-        body_high=380.0,
-        body_gain=0.28,
-        lowpass_cutoff=2600.0,
-        highpass_cutoff=40.0,
-    )
-
-    return {
-        "keypress.default": ev([default_variant(i) for i in range(3)], "random", 1.0),
-        "keypress.space": ev([space], "single", 1.0),
-        "keypress.delete": ev([delete], "single", 0.95),
-        "keypress.return": ev([ret], "single", 0.95),
-        "keypress.shift": ev([shift], "single", 0.90),
-        "keypress.symbol": ev([symbol], "single", 0.90),
-    }
-
-
-def build_kailh_box_jade(rng: np.random.Generator) -> Dict[str, Dict]:
-    def default_variant(i: int) -> np.ndarray:
-        r = child_rng(rng, 10 + i)
-        base = float(r.uniform(4200.0, 5600.0))
-        duration = float(r.uniform(0.036, 0.046))
-
-        y = percussive(
-            r,
-            duration,
-            base * 1.08,
-            base * 0.96,
-            wave="triangle",
-            tone_gain=0.20,
-            attack_dur=0.006,
-            attack_high=2600.0,
-            attack_gain=0.72,
-            body_low=base * 0.8,
-            body_high=min(base * 1.6, 14000.0),
-            body_gain=0.48,
-            lowpass_cutoff=9500.0,
-            highpass_cutoff=1300.0,
-        )
-
-        click = noise(r, 0.005)
-        click = highpass(click, 3000.0)
-        click *= decay_env(0.005, 0.002)
-
-        y = add_delayed(y, click, 0.010, 0.55)
-        return finalize(y)
-
-    def clicky_hit(seed: int, duration: float, base: float) -> np.ndarray:
-        r = child_rng(rng, seed)
-
-        y = percussive(
-            r,
-            duration,
-            base * 1.06,
-            base * 0.94,
-            wave="triangle",
-            tone_gain=0.18,
-            attack_dur=0.006,
-            attack_high=2400.0,
-            attack_gain=0.72,
-            body_low=base * 0.75,
-            body_high=min(base * 1.6, 14000.0),
-            body_gain=0.46,
-            lowpass_cutoff=9000.0,
-            highpass_cutoff=1100.0,
-        )
-
-        click = noise(r, 0.005)
-        click = highpass(click, 2800.0)
-        click *= decay_env(0.005, 0.002)
-
-        y = add_delayed(y, click, 0.009, 0.5)
-        return finalize(y)
-
-    return {
-        "keypress.default": ev([default_variant(i) for i in range(3)], "random", 1.0),
-        "keypress.space": ev([clicky_hit(20, 0.062, 3200.0)], "single", 1.0),
-        "keypress.delete": ev([clicky_hit(21, 0.034, 5200.0)], "single", 0.95),
-        "keypress.return": ev([clicky_hit(22, 0.075, 3900.0)], "single", 0.95),
-        "keypress.shift": ev([clicky_hit(23, 0.032, 5800.0)], "single", 0.90),
-        "keypress.symbol": ev([clicky_hit(24, 0.048, 4700.0)], "single", 0.90),
-    }
-
-
-def build_holy_panda(rng: np.random.Generator) -> Dict[str, Dict]:
-    def default_variant(i: int) -> np.ndarray:
-        r = child_rng(rng, 10 + i)
-        base = float(r.uniform(210.0, 280.0))
-        duration = float(r.uniform(0.052, 0.066))
-
-        y = percussive(
-            r,
-            duration,
-            base * 1.25,
-            base * 0.82,
-            wave="sine",
-            tone_gain=0.76,
-            attack_dur=0.007,
-            attack_high=1300.0,
-            attack_gain=0.50,
-            body_low=180.0,
-            body_high=480.0,
-            body_gain=0.35,
-            lowpass_cutoff=5200.0,
-            highpass_cutoff=60.0,
-        )
-
-        bottom = tone(0.035, 115.0, 78.0, wave="sine")
-        bottom *= decay_env(0.035, 0.012)
-
-        y = add_delayed(y, bottom, 0.011, 0.55)
-        return finalize(y)
-
-    def tactile_hit(seed: int, duration: float, base: float, bottom_freq: float) -> np.ndarray:
-        r = child_rng(rng, seed)
-
-        y = percussive(
-            r,
-            duration,
-            base * 1.22,
-            base * 0.84,
-            wave="sine",
-            tone_gain=0.74,
-            attack_dur=0.007,
-            attack_high=1200.0,
-            attack_gain=0.48,
-            body_low=170.0,
-            body_high=460.0,
-            body_gain=0.33,
-            lowpass_cutoff=5000.0,
-            highpass_cutoff=55.0,
-        )
-
-        bottom = tone(0.035, bottom_freq * 1.1, bottom_freq * 0.8, wave="sine")
-        bottom *= decay_env(0.035, 0.012)
-
-        y = add_delayed(y, bottom, 0.012, 0.52)
-        return finalize(y)
-
-    return {
-        "keypress.default": ev([default_variant(i) for i in range(3)], "random", 1.0),
-        "keypress.space": ev([tactile_hit(20, 0.085, 150.0, 85.0)], "single", 1.0),
-        "keypress.delete": ev([tactile_hit(21, 0.042, 320.0, 180.0)], "single", 0.95),
-        "keypress.return": ev([tactile_hit(22, 0.090, 185.0, 95.0)], "single", 0.95),
-        "keypress.shift": ev([tactile_hit(23, 0.036, 360.0, 210.0)], "single", 0.90),
-        "keypress.symbol": ev([tactile_hit(24, 0.055, 260.0, 140.0)], "single", 0.90),
-    }
-
-
-def build_ibm_model_m(rng: np.random.Generator) -> Dict[str, Dict]:
-    def default_variant(i: int) -> np.ndarray:
-        r = child_rng(rng, 10 + i)
-        scale = float(r.uniform(0.92, 1.08))
-        duration = float(r.uniform(0.105, 0.125))
-
-        return metallic(
-            r,
-            duration,
-            partials=(
-                2300.0 * scale,
-                3150.0 * scale,
-                4200.0 * scale,
-                5400.0 * scale,
-            ),
-            partial_gain=0.16,
-            attack_high=1800.0,
-            attack_gain=0.52,
-            body_low=1600.0,
-            body_high=7000.0,
-            body_gain=0.22,
-            thunk_freq=88.0 * scale,
-            thunk_gain=0.38,
-            lowpass_cutoff=9500.0,
-            highpass_cutoff=85.0,
-        )
-
-    space = metallic(
-        child_rng(rng, 20),
-        0.130,
-        partials=(2100.0, 2900.0, 3900.0, 5000.0),
-        partial_gain=0.15,
-        attack_high=1600.0,
-        attack_gain=0.52,
-        body_low=1400.0,
-        body_high=6500.0,
-        body_gain=0.22,
-        thunk_freq=70.0,
-        thunk_gain=0.45,
-        lowpass_cutoff=9000.0,
-        highpass_cutoff=70.0,
-    )
-
-    delete = metallic(
-        child_rng(rng, 21),
-        0.060,
-        partials=(2600.0, 3600.0, 4700.0),
-        partial_gain=0.15,
-        attack_high=2000.0,
-        attack_gain=0.52,
-        body_low=1800.0,
-        body_high=7500.0,
-        body_gain=0.20,
-        thunk_freq=110.0,
-        thunk_gain=0.25,
-        lowpass_cutoff=10000.0,
-        highpass_cutoff=100.0,
-    )
-
-    ret = metallic(
-        child_rng(rng, 22),
-        0.140,
-        partials=(2200.0, 3100.0, 4100.0, 5300.0),
-        partial_gain=0.16,
-        attack_high=1700.0,
-        attack_gain=0.55,
-        body_low=1500.0,
-        body_high=6800.0,
-        body_gain=0.22,
-        thunk_freq=80.0,
-        thunk_gain=0.42,
-        lowpass_cutoff=9200.0,
-        highpass_cutoff=75.0,
-    )
-
-    shift = metallic(
-        child_rng(rng, 23),
-        0.048,
-        partials=(2900.0, 4000.0, 5200.0),
-        partial_gain=0.14,
-        attack_high=2200.0,
-        attack_gain=0.50,
-        body_low=2000.0,
-        body_high=8000.0,
-        body_gain=0.18,
-        thunk_freq=0.0,
-        thunk_gain=0.0,
-        lowpass_cutoff=10500.0,
-        highpass_cutoff=130.0,
-    )
-
-    symbol = metallic(
-        child_rng(rng, 24),
-        0.065,
-        partials=(2500.0, 3400.0, 4600.0),
-        partial_gain=0.15,
-        attack_high=1900.0,
-        attack_gain=0.50,
-        body_low=1700.0,
-        body_high=7200.0,
-        body_gain=0.20,
-        thunk_freq=140.0,
-        thunk_gain=0.25,
-        lowpass_cutoff=9800.0,
-        highpass_cutoff=95.0,
-    )
-
-    return {
-        "keypress.default": ev([default_variant(i) for i in range(3)], "random", 1.0),
-        "keypress.space": ev([space], "single", 1.0),
-        "keypress.delete": ev([delete], "single", 0.95),
-        "keypress.return": ev([ret], "single", 0.95),
-        "keypress.shift": ev([shift], "single", 0.90),
-        "keypress.symbol": ev([symbol], "single", 0.90),
-    }
-
-
-def build_royal_typewriter(rng: np.random.Generator) -> Dict[str, Dict]:
-    def hammer(
-        r: np.random.Generator,
-        duration: float,
-        scale: float,
-        thunk: float,
-    ) -> np.ndarray:
-        return metallic(
-            r,
-            duration,
-            partials=(
-                3000.0 * scale,
-                4700.0 * scale,
-                6200.0 * scale,
-            ),
-            partial_gain=0.12,
-            attack_high=2300.0,
-            attack_gain=0.55,
-            body_low=2000.0,
-            body_high=7500.0,
-            body_gain=0.18,
-            thunk_freq=thunk,
-            thunk_gain=0.18,
-            lowpass_cutoff=11000.0,
-            highpass_cutoff=250.0,
-        )
-
-    def default_variant(i: int) -> np.ndarray:
-        r = child_rng(rng, 10 + i)
-        return hammer(
-            r,
-            float(r.uniform(0.042, 0.054)),
-            float(r.uniform(0.92, 1.08)),
-            float(r.uniform(160.0, 210.0)),
-        )
-
-    def space_ratchet() -> np.ndarray:
-        r = child_rng(rng, 20)
-        ticks: List[np.ndarray] = []
-
-        for i in range(3):
-            tick = noise(r, 0.012)
-            tick = bandpass(tick, 1500.0 + 220.0 * i, 3200.0 + 320.0 * i)
-            tick *= decay_env(0.012, 0.004)
-
-            thump = tone(0.018, 150.0 - 10.0 * i, 110.0 - 8.0 * i, wave="sine")
-            thump *= decay_env(0.018, 0.006)
-
-            ticks.append(
-                finalize(
-                    mix(
-                        [
-                            (tick, 0.72),
-                            (thump, 0.38),
-                        ]
-                    ),
-                    target_db=-4.0,
-                )
-            )
-
-        return finalize(concat(ticks, gap_s=0.018))
-
-    delete = hammer(child_rng(rng, 21), 0.042, 1.15, 220.0)
-
-    ret = chime(
-        child_rng(rng, 22),
-        0.150,
-        freqs=(1318.0, 1976.0, 2637.0),
-        gain=0.30,
-        attack_click=True,
-    )
-
-    clunk = tone(0.035, 160.0, 90.0, wave="sine")
-    clunk *= decay_env(0.035, 0.012)
-    ret = add_delayed(ret, clunk, 0.006, 0.35)
-    ret = finalize(ret)
-
-    shift = hammer(child_rng(rng, 23), 0.040, 1.30, 260.0)
-
-    symbol = finalize(
-        concat(
-            [
-                hammer(child_rng(rng, 24), 0.042, 1.05, 200.0),
-                hammer(child_rng(rng, 25), 0.038, 1.20, 240.0),
-            ],
-            gap_s=0.014,
-        )
-    )
-
-    return {
-        "keypress.default": ev([default_variant(i) for i in range(3)], "random", 1.0),
-        "keypress.space": ev([space_ratchet()], "single", 1.0),
-        "keypress.delete": ev([delete], "single", 0.95),
-        "keypress.return": ev([ret], "single", 0.95),
-        "keypress.shift": ev([shift], "single", 0.90),
-        "keypress.symbol": ev([symbol], "single", 0.90),
-    }
-
-
-def build_creamy_linear_jelly(rng: np.random.Generator) -> Dict[str, Dict]:
-    def default_variant(i: int) -> np.ndarray:
-        r = child_rng(rng, 10 + i)
-        base = float(r.uniform(88.0, 118.0))
-        duration = float(r.uniform(0.055, 0.075))
-
-        return percussive(
-            r,
-            duration,
-            base * 1.18,
-            base * 0.86,
-            wave="sine",
-            tone_gain=0.78,
-            attack_dur=0.006,
-            attack_low=800.0,
-            attack_gain=0.16,
-            body_low=110.0,
-            body_high=320.0,
-            body_gain=0.22,
-            lowpass_cutoff=750.0,
-            highpass_cutoff=28.0,
-        )
-
-    space = percussive(
-        child_rng(rng, 20),
-        0.105,
-        66.0,
-        48.0,
-        wave="sine",
-        tone_gain=0.82,
-        attack_dur=0.009,
-        attack_low=600.0,
-        attack_gain=0.18,
-        body_low=80.0,
-        body_high=260.0,
-        body_gain=0.25,
-        lowpass_cutoff=600.0,
-        highpass_cutoff=24.0,
-    )
-
-    delete = percussive(
-        child_rng(rng, 21),
-        0.046,
-        128.0,
-        94.0,
-        wave="sine",
-        tone_gain=0.60,
-        attack_dur=0.005,
-        attack_low=900.0,
-        attack_gain=0.14,
-        body_low=130.0,
-        body_high=360.0,
-        body_gain=0.18,
-        lowpass_cutoff=900.0,
-        highpass_cutoff=35.0,
-    )
-
-    ret = percussive(
-        child_rng(rng, 22),
-        0.088,
-        84.0,
-        60.0,
-        wave="sine",
-        tone_gain=0.76,
-        attack_dur=0.007,
-        attack_low=700.0,
-        attack_gain=0.16,
-        body_low=100.0,
-        body_high=300.0,
-        body_gain=0.22,
-        lowpass_cutoff=700.0,
-        highpass_cutoff=28.0,
-    )
-
-    shift = percussive(
-        child_rng(rng, 23),
-        0.038,
-        138.0,
-        100.0,
-        wave="sine",
-        tone_gain=0.55,
-        attack_dur=0.004,
-        attack_low=950.0,
-        attack_gain=0.12,
-        body_low=140.0,
-        body_high=380.0,
-        body_gain=0.16,
-        lowpass_cutoff=950.0,
-        highpass_cutoff=40.0,
-    )
-
-    symbol = percussive(
-        child_rng(rng, 24),
-        0.056,
-        102.0,
-        74.0,
-        wave="sine",
-        tone_gain=0.68,
-        attack_dur=0.006,
-        attack_low=800.0,
-        attack_gain=0.14,
-        body_low=110.0,
-        body_high=320.0,
-        body_gain=0.20,
-        lowpass_cutoff=800.0,
-        highpass_cutoff=30.0,
-    )
-
-    return {
-        "keypress.default": ev([default_variant(i) for i in range(3)], "random", 1.0),
-        "keypress.space": ev([space], "single", 1.0),
-        "keypress.delete": ev([delete], "single", 0.95),
-        "keypress.return": ev([ret], "single", 0.95),
-        "keypress.shift": ev([shift], "single", 0.90),
-        "keypress.symbol": ev([symbol], "single", 0.90),
-    }
-
 
 def build_chiptune_arcade(rng: np.random.Generator) -> Dict[str, Dict]:
     def default_variant(i: int) -> np.ndarray:
@@ -1140,28 +311,17 @@ def build_chiptune_arcade(rng: np.random.Generator) -> Dict[str, Dict]:
 
     space = chip_blip(0.080, 300.0, 940.0)
     delete = chip_blip(0.070, 950.0, 220.0)
-
     ret = chip_sequence(
-        [
-            (659.0, 659.0),
-            (880.0, 880.0),
-            (1318.0, 1318.0),
-        ],
+        [(659.0, 659.0), (880.0, 880.0), (1318.0, 1318.0)],
         note_dur=0.042,
         gap=0.003,
     )
-
     shift = chip_blip(0.038, 1318.0, 1760.0)
-
     symbol = chip_sequence(
-        [
-            (987.0, 987.0),
-            (1318.0, 1318.0),
-        ],
+        [(987.0, 987.0), (1318.0, 1318.0)],
         note_dur=0.036,
         gap=0.004,
     )
-
     return {
         "keypress.default": ev([default_variant(i) for i in range(3)], "random", 1.0),
         "keypress.space": ev([space], "single", 1.0),
@@ -1171,37 +331,26 @@ def build_chiptune_arcade(rng: np.random.Generator) -> Dict[str, Dict]:
         "keypress.symbol": ev([symbol], "single", 0.90),
     }
 
-
 def build_ceramic_glass_marble(rng: np.random.Generator) -> Dict[str, Dict]:
+    def glass_hit(r, duration, base):
+        return _ac_modal(
+            duration,
+            base,
+            ratios=[1.0, 2.68, 4.05, 5.82],
+            gains=[0.8, 0.35, 0.22, 0.12],
+            taus=[duration / 3.0, duration / 4.0, duration / 5.0, duration / 6.0],
+            rng=r,
+        )
     def default_variant(i: int) -> np.ndarray:
         r = child_rng(rng, 10 + i)
         base = float(r.uniform(2100.0, 2700.0))
-        duration = float(r.uniform(0.038, 0.048))
-        return glass(r, duration, base)
+        return finalize(glass_hit(r, float(r.uniform(0.038, 0.048)), base))
 
-    space = glass(child_rng(rng, 20), 0.070, 1200.0, partial_gain=0.32)
-    delete = glass(child_rng(rng, 21), 0.035, 2600.0, partial_gain=0.28)
-
-    ret = chime(
-        child_rng(rng, 22),
-        0.120,
-        freqs=(1800.0, 2700.0, 3600.0),
-        gain=0.28,
-        attack_click=True,
-    )
-
-    shift = glass(child_rng(rng, 23), 0.035, 2900.0, partial_gain=0.27)
-
-    symbol = finalize(
-        concat(
-            [
-                glass(child_rng(rng, 24), 0.040, 2300.0),
-                glass(child_rng(rng, 25), 0.040, 2800.0),
-            ],
-            gap_s=0.010,
-        )
-    )
-
+    space = finalize(glass_hit(child_rng(rng, 20), 0.070, 1200.0))
+    delete = finalize(glass_hit(child_rng(rng, 21), 0.035, 2600.0))
+    ret = finalize(glass_hit(child_rng(rng, 22), 0.090, 1800.0))
+    shift = finalize(glass_hit(child_rng(rng, 23), 0.035, 2900.0))
+    symbol = finalize(concat([glass_hit(child_rng(rng, 24), 0.040, 2300.0), glass_hit(child_rng(rng, 25), 0.040, 2800.0)], gap_s=0.010))
     return {
         "keypress.default": ev([default_variant(i) for i in range(3)], "random", 1.0),
         "keypress.space": ev([space], "single", 1.0),
@@ -1210,98 +359,18 @@ def build_ceramic_glass_marble(rng: np.random.Generator) -> Dict[str, Dict]:
         "keypress.shift": ev([shift], "single", 0.90),
         "keypress.symbol": ev([symbol], "single", 0.90),
     }
-
 
 def build_water_bubble_pop(rng: np.random.Generator) -> Dict[str, Dict]:
     def default_variant(i: int) -> np.ndarray:
         r = child_rng(rng, 10 + i)
         f0 = float(r.uniform(950.0, 1400.0))
         f1 = f0 * float(r.uniform(0.32, 0.45))
-        duration = float(r.uniform(0.045, 0.060))
-        return bubble(r, duration, f0, f1, low=300.0, high=2600.0)
-
+        return bubble(r, float(r.uniform(0.045, 0.060)), f0, f1)
     space = bubble(child_rng(rng, 20), 0.100, 320.0, 110.0, low=120.0, high=900.0)
     delete = bubble(child_rng(rng, 21), 0.040, 1600.0, 700.0, low=400.0, high=3200.0)
-
-    ret = finalize(
-        concat(
-            [
-                bubble(child_rng(rng, 22), 0.055, 700.0, 350.0, low=200.0, high=1800.0),
-                bubble(child_rng(rng, 23), 0.055, 1000.0, 450.0, low=250.0, high=2200.0),
-            ],
-            gap_s=0.008,
-        )
-    )
-
-    shift = bubble(child_rng(rng, 24), 0.035, 1800.0, 900.0, low=500.0, high=3800.0)
-
-    symbol = finalize(
-        concat(
-            [
-                bubble(child_rng(rng, 25), 0.040, 1200.0, 600.0, low=300.0, high=2600.0),
-                bubble(child_rng(rng, 26), 0.035, 1500.0, 800.0, low=350.0, high=3000.0),
-            ],
-            gap_s=0.007,
-        )
-    )
-
-    return {
-        "keypress.default": ev([default_variant(i) for i in range(3)], "random", 1.0),
-        "keypress.space": ev([space], "single", 1.0),
-        "keypress.delete": ev([delete], "single", 0.95),
-        "keypress.return": ev([ret], "single", 0.95),
-        "keypress.shift": ev([shift], "single", 0.90),
-        "keypress.symbol": ev([symbol], "single", 0.90),
-    }
-
-
-def build_teak_woodblock(rng: np.random.Generator) -> Dict[str, Dict]:
-    def default_variant(i: int) -> np.ndarray:
-        r = child_rng(rng, 10 + i)
-        base = float(r.uniform(680.0, 860.0))
-        duration = float(r.uniform(0.045, 0.060))
-        return wood(r, duration, base)
-
-    space = wood(
-        child_rng(rng, 20),
-        0.085,
-        390.0,
-        brightness=2.0,
-        lowpass_cutoff=6000.0,
-        highpass_cutoff=100.0,
-    )
-
-    delete = wood(
-        child_rng(rng, 21),
-        0.038,
-        1500.0,
-        brightness=2.6,
-        lowpass_cutoff=9000.0,
-        highpass_cutoff=350.0,
-    )
-
-    ret = finalize(
-        concat(
-            [
-                wood(child_rng(rng, 22), 0.055, 720.0),
-                wood(child_rng(rng, 23), 0.055, 560.0),
-            ],
-            gap_s=0.018,
-        )
-    )
-
-    shift = wood(child_rng(rng, 24), 0.040, 1100.0)
-
-    symbol = finalize(
-        concat(
-            [
-                wood(child_rng(rng, 25), 0.042, 850.0),
-                wood(child_rng(rng, 26), 0.036, 1250.0),
-            ],
-            gap_s=0.010,
-        )
-    )
-
+    ret = finalize(concat([bubble(child_rng(rng, 22), 0.055, 700.0, 350.0), bubble(child_rng(rng, 23), 0.055, 1000.0, 450.0)], gap_s=0.008))
+    shift = bubble(child_rng(rng, 24), 0.035, 1800.0, 900.0)
+    symbol = finalize(concat([bubble(child_rng(rng, 25), 0.040, 1200.0, 600.0), bubble(child_rng(rng, 26), 0.035, 1500.0, 800.0)], gap_s=0.007))
     return {
         "keypress.default": ev([default_variant(i) for i in range(3)], "random", 1.0),
         "keypress.space": ev([space], "single", 1.0),
@@ -1313,42 +382,259 @@ def build_teak_woodblock(rng: np.random.Generator) -> Dict[str, Dict]:
 
 
 # ----------------------------------------------------------------------------
-# Pack registry
+# LeanType Ultra-Realistic Procedural Sound Pack Engine
+# Drop-in physical-modeling helpers + upgraded builder functions
+# ----------------------------------------------------------------------------
+#
+# This file assumes the following primitives already exist in
+# tools/generate_all_soundpacks.py:
+#
+#   SAMPLE_RATE
+#   finalize(...)
+#   tone(...)
+#   decay_env(...)
+#   noise(...)
+#   lowpass(...)
+#   highpass(...)
+#   bandpass(...)
+#   mix(...)
+#   add_delayed(...)
+#   concat(...)
+#   ev(...)
+#   child_rng(...)
+#
+# All new helpers are prefixed with _ac_ to avoid collisions.
 # ----------------------------------------------------------------------------
 
-@dataclass
-class PackSpec:
-    slug: str
-    name: str
-    summary: str
-    tags: List[str]
-    builder: Callable[[np.random.Generator], Dict[str, Dict]]
-    master_volume: float = 0.85
+
+def _ac_final(audio: np.ndarray) -> np.ndarray:
+    """
+    Compatibility wrapper for final normalization.
+    """
+    try:
+        return finalize(
+            audio,
+            target_db=-2.0,
+            fade_in_ms=0.3,
+            fade_out_ms=2.0,
+        )
+    except TypeError:
+        return finalize(audio, target_db=-2.0)
 
 
+def _ac_brown_noise(rng: np.random.Generator, duration: float) -> np.ndarray:
+    """
+    Brownian noise: integrated white noise.
+    Much more organic than raw white noise for friction, air movement,
+    wooden bodies, drum shells, and cavity resonance excitation.
+    """
+    n = max(1, int(round(duration * SAMPLE_RATE)))
+    x = np.cumsum(rng.standard_normal(n))
+    x -= float(np.mean(x))
 
-# ----------------------------------------------------------------------------
-# 6 Additional Musical Instrument Sound Packs
-# ----------------------------------------------------------------------------
+    peak = float(np.max(np.abs(x)))
+    if peak > 1e-9:
+        x /= peak
 
-# ----------------------------------------------------------------------------
-# Additional shared DSP helpers for instrument packs
-# ----------------------------------------------------------------------------
+    return x
 
-def _modal_layers(
+
+def _ac_softsat(audio: np.ndarray, drive: float = 2.0) -> np.ndarray:
+    """
+    Gentle tanh soft saturation.
+
+    Used to turn mathematically clean waveforms into non-linear physical
+    collision material. This adds dense, organic harmonics without the
+    brittle character of bare sine waves.
+    """
+    audio = np.asarray(audio, dtype=np.float64)
+
+    if audio.size == 0 or drive <= 0.0:
+        return audio
+
+    y = np.tanh(drive * audio)
+
+    peak = float(np.max(np.abs(y)))
+    if peak > 1e-9:
+        y /= peak
+
+    return y
+
+
+def _ac_delayed_decay(
+    duration: float,
+    delay_s: float,
+    tau: float,
+    attack_s: float = 0.0002,
+) -> np.ndarray:
+    """
+    Creates an exponential decay envelope that starts after delay_s.
+
+    This is used for multi-stage physical events:
+      0.0 ms  : initial impact
+      2.0 ms  : body displacement
+      4.0 ms+ : cavity / resonant decay
+    """
+    n = max(1, int(round(duration * SAMPLE_RATE)))
+    env = np.zeros(n, dtype=np.float64)
+
+    start = int(round(delay_s * SAMPLE_RATE))
+    if start >= n:
+        return env
+
+    seg_dur = (n - start) / SAMPLE_RATE
+    seg = decay_env(seg_dur, max(0.001, tau), attack_s=attack_s)
+
+    if len(seg) > n - start:
+        seg = seg[: n - start]
+
+    env[start:] = seg
+    return env
+
+
+def _ac_fm_impact(
+    rng: np.random.Generator,
+    duration: float,
+    f0: float,
+    f1: float,
+    mod_ratio: float = 1.8,
+    index0: float = 6.0,
+    drive: float = 2.5,
+) -> np.ndarray:
+    """
+    Non-linear collision impulse using fast exponential FM pitch sweep.
+
+    Bare sine waves are avoided. Instead:
+      - exponentially falling/rising carrier frequency
+      - decaying FM index
+      - small noise injection
+      - tanh saturation
+
+    This creates a dense physical contact transient.
+    """
+    n = max(1, int(round(duration * SAMPLE_RATE)))
+    t = np.arange(n, dtype=np.float64) / SAMPLE_RATE
+
+    f0 = max(20.0, float(f0))
+    f1 = max(20.0, float(f1))
+
+    ratio = max(f1 / f0, 1e-6)
+    freqs = f0 * (ratio ** (t / max(duration, 1e-5)))
+
+    carrier_phase = 2.0 * np.pi * np.cumsum(freqs) / SAMPLE_RATE
+
+    mod_freqs = freqs * float(mod_ratio)
+    mod_phase = 2.0 * np.pi * np.cumsum(mod_freqs) / SAMPLE_RATE
+
+    mod_env = np.exp(-t / max(duration / 6.0, 0.001))
+
+    y = np.sin(carrier_phase + float(index0) * mod_env * np.sin(mod_phase))
+
+    # Tiny stochastic component prevents sterile mathematical repetition.
+    y += 0.10 * rng.standard_normal(n)
+
+    return _ac_softsat(y, drive)
+
+
+def _ac_noise_burst(
+    rng: np.random.Generator,
+    duration: float,
+    low: float | None = None,
+    high: float | None = None,
+    drive: float = 2.0,
+) -> np.ndarray:
+    """
+    Coloured friction noise burst.
+
+    Uses brownian noise blended with a small amount of white noise, then
+    filters and soft-saturates it. This avoids harsh synthetic white-noise
+    clicks while still preserving physical contact detail.
+    """
+    brown = _ac_brown_noise(rng, duration)
+    white = noise(rng, duration)
+
+    x = 0.72 * brown + 0.28 * white
+    x = lowpass(x, min(14000.0, SAMPLE_RATE / 2.0 - 500.0))
+
+    nyq_limit = SAMPLE_RATE / 2.0 - 200.0
+
+    if low is not None and high is not None:
+        low = max(30.0, float(low))
+        high = min(float(high), nyq_limit)
+
+        if high <= low:
+            high = min(nyq_limit, low * 1.1)
+
+        if high > low:
+            x = bandpass(x, low, high, order=2)
+
+    elif high is not None:
+        high = min(float(high), nyq_limit)
+        x = highpass(x, high)
+
+    elif low is not None:
+        low = max(30.0, float(low))
+        x = highpass(x, low)
+
+    x *= decay_env(duration, max(0.0015, duration / 5.0), attack_s=0.0002)
+
+    return _ac_softsat(x, drive)
+
+
+def _ac_cavity(
+    rng: np.random.Generator,
+    duration: float,
+    bands: List[Tuple[float, float, float]],
+    drive: float = 1.4,
+) -> np.ndarray:
+    """
+    Hollow-body / Helmholtz cavity model.
+
+    Each band is:
+        (center_frequency, bandwidth, gain)
+
+    The cavity is excited by coloured noise and rendered with parallel
+    resonant bandpass filters plus weak sine resonators.
+    """
+    n = max(1, int(round(duration * SAMPLE_RATE)))
+    out = np.zeros(n, dtype=np.float64)
+
+    src = _ac_noise_burst(rng, duration, drive=1.2)
+
+    for freq, bw, gain in bands:
+        freq = float(freq) * float(rng.uniform(0.980, 1.020))
+        bw = max(15.0, float(bw))
+
+        lo = max(30.0, freq - bw * 0.5)
+        hi = min(SAMPLE_RATE / 2.0 - 200.0, freq + bw * 0.5)
+
+        if hi <= lo:
+            continue
+
+        bp = bandpass(src, lo, hi, order=2)
+
+        ring = tone(duration, freq, freq * 0.992, wave="sine", curve="exp")
+        ring *= decay_env(duration, max(0.006, duration / 5.0), attack_s=0.0003)
+
+        out += bp * float(gain)
+        out += ring * float(gain) * 0.22
+
+    return _ac_softsat(out, drive)
+
+
+def _ac_modal(
     duration: float,
     base_freq: float,
     ratios: List[float],
     gains: List[float],
     taus: float | List[float],
     rng: np.random.Generator | None = None,
-    detune: float = 0.003,
+    detune: float = 0.004,
 ) -> np.ndarray:
     """
-    Additive modal resonance builder.
+    Multi-modal resonance builder.
 
-    Creates sine partials at base_freq * ratio with independent exponential
-    decays and optional slight random detuning.
+    Used for membranes, tines, bells, strings, wooden bodies, and metal parts.
     """
     if isinstance(taus, (int, float)):
         taus = [float(taus)] * len(ratios)
@@ -1367,50 +653,325 @@ def _modal_layers(
             freq *= float(rng.uniform(1.0 - detune, 1.0 + detune))
 
         partial = tone(duration, freq, freq * 0.995, wave="sine", curve="exp")
-        partial *= decay_env(duration, max(0.001, tau))
+        partial *= decay_env(duration, max(0.001, tau), attack_s=0.00025)
 
         layers.append((partial, float(gain)))
 
     return mix(layers)
 
 
-def _transient_noise(
+def _ac_switch_hit(
     rng: np.random.Generator,
     duration: float,
-    low: float | None = None,
-    high: float | None = None,
-    tau: float | None = None,
+    bottom: float = 150.0,
+    cavity_bands: List[Tuple[float, float, float]] | None = None,
+    click_low: float = 3800.0,
+    click_high: float = 5500.0,
+    click_gain: float = 0.45,
+    bottom_gain: float = 0.85,
+    spring_freq: float = 1800.0,
+    spring_gain: float = 0.07,
+    drive: float = 2.6,
+    lowpass_cutoff: float = 9000.0,
+    highpass_cutoff: float = 45.0,
+    second_click_delay: float = 0.0,
+    second_click_gain: float = 0.0,
 ) -> np.ndarray:
     """
-    Short filtered noise burst with exponential decay.
+    Multi-stage mechanical switch physics.
+
+    Stage 1: 0-2 ms high-frequency impact / click-bar snap.
+    Stage 2: 2-12 ms low-mid body displacement / bottom-out.
+    Stage 3: 4+ ms cavity decay and subtle spring/metal ring.
     """
-    if tau is None:
-        tau = max(0.0015, duration / 3.0)
+    if cavity_bands is None:
+        cavity_bands = [
+            (260.0, 90.0, 0.65),
+            (460.0, 130.0, 0.42),
+        ]
 
-    n = noise(rng, duration)
+    layers: List[Tuple[np.ndarray, float]] = []
 
-    if low is not None and high is not None:
-        n = bandpass(n, low, high)
-    elif high is not None:
-        n = highpass(n, high)
-    elif low is not None:
-        n = lowpass(n, low)
+    # ------------------------------------------------------------------
+    # Stage 1: primary impact transient
+    # ------------------------------------------------------------------
+    click_fm = _ac_fm_impact(
+        rng,
+        duration,
+        click_high * 0.95,
+        click_low * 0.75,
+        mod_ratio=2.1,
+        index0=5.5,
+        drive=drive * 0.75,
+    )
 
-    n *= decay_env(duration, max(0.001, tau))
-    return n
+    click_noise = _ac_noise_burst(
+        rng,
+        duration,
+        low=click_low,
+        high=click_high,
+        drive=drive * 0.65,
+    )
+
+    click_env = _ac_delayed_decay(duration, 0.0, 0.0032, attack_s=0.00015)
+
+    click = mix(
+        [
+            (click_fm, 0.75),
+            (click_noise, click_gain),
+        ]
+    ) * click_env
+
+    layers.append((click, 1.0))
+
+    # ------------------------------------------------------------------
+    # Optional secondary click: tactile snap, double click, housing impact
+    # ------------------------------------------------------------------
+    if second_click_gain > 0.0:
+        r2 = child_rng(rng, 91)
+
+        click2_fm = _ac_fm_impact(
+            r2,
+            duration,
+            click_high * 0.82,
+            click_low * 0.68,
+            mod_ratio=2.0,
+            index0=4.6,
+            drive=drive * 0.70,
+        )
+
+        click2_noise = _ac_noise_burst(
+            r2,
+            duration,
+            low=click_low * 0.90,
+            high=click_high * 0.90,
+            drive=drive * 0.60,
+        )
+
+        click2_env = _ac_delayed_decay(
+            duration,
+            second_click_delay,
+            0.0036,
+            attack_s=0.00015,
+        )
+
+        click2 = mix(
+            [
+                (click2_fm, 0.68),
+                (click2_noise, click_gain * 0.90),
+            ]
+        ) * click2_env * float(second_click_gain)
+
+        layers.append((click2, 1.0))
+
+    # ------------------------------------------------------------------
+    # Stage 2: body displacement / bottom-out impact
+    # ------------------------------------------------------------------
+    bottom_fm = _ac_fm_impact(
+        rng,
+        duration,
+        bottom * 2.4,
+        bottom * 0.82,
+        mod_ratio=1.35,
+        index0=4.8,
+        drive=drive,
+    )
+
+    bottom_noise = _ac_noise_burst(
+        rng,
+        duration,
+        low=bottom * 0.8,
+        high=bottom * 4.0,
+        drive=drive * 0.55,
+    )
+
+    bottom_env = _ac_delayed_decay(
+        duration,
+        0.002,
+        max(0.006, duration / 7.5),
+        attack_s=0.0002,
+    )
+
+    bottom = mix(
+        [
+            (bottom_fm, 0.80),
+            (bottom_noise, 0.40),
+        ]
+    ) * bottom_env * float(bottom_gain)
+
+    layers.append((bottom, 1.0))
+
+    # ------------------------------------------------------------------
+    # Stage 3: cavity decay
+    # ------------------------------------------------------------------
+    cavity = _ac_cavity(rng, duration, cavity_bands, drive=drive * 0.55)
+    cavity_env = _ac_delayed_decay(
+        duration,
+        0.004,
+        max(0.014, duration / 3.8),
+        attack_s=0.0003,
+    )
+
+    layers.append((cavity * cavity_env, 0.90))
+
+    # ------------------------------------------------------------------
+    # Subtle spring / metallic after-ring
+    # ------------------------------------------------------------------
+    if spring_gain > 0.0:
+        spring_f = float(spring_freq) * float(rng.uniform(0.980, 1.020))
+
+        spring = tone(duration, spring_f, spring_f * 0.985, wave="sine", curve="exp")
+        spring *= _ac_delayed_decay(
+            duration,
+            0.007,
+            max(0.008, duration / 7.0),
+            attack_s=0.0003,
+        )
+
+        layers.append((spring, float(spring_gain)))
+
+    # ------------------------------------------------------------------
+    # Air / friction tail
+    # ------------------------------------------------------------------
+    air = lowpass(_ac_brown_noise(rng, duration), 900.0)
+    air *= _ac_delayed_decay(
+        duration,
+        0.006,
+        max(0.010, duration / 5.0),
+        attack_s=0.0003,
+    )
+    air *= 0.07
+
+    layers.append((air, 1.0))
+
+    y = mix(layers)
+
+    if highpass_cutoff > 0.0:
+        y = highpass(y, highpass_cutoff)
+
+    if lowpass_cutoff > 0.0:
+        y = lowpass(y, min(lowpass_cutoff, SAMPLE_RATE / 2.0 - 300.0))
+
+    y = _ac_softsat(y, max(1.1, drive * 0.35))
+
+    return _ac_final(y)
 
 
-def _ks_pluck(
+def _ac_modal_instrument(
+    rng: np.random.Generator,
+    duration: float,
+    base: float,
+    ratios: List[float],
+    gains: List[float],
+    taus: List[float],
+    exciter_low: float,
+    exciter_high: float,
+    exciter_gain: float = 0.55,
+    body_bands: List[Tuple[float, float, float]] | None = None,
+    body_gain: float = 0.45,
+    drive: float = 2.2,
+    lowpass_cutoff: float = 10000.0,
+    highpass_cutoff: float = 50.0,
+) -> np.ndarray:
+    """
+    Generic resonant acoustic object:
+      - modal resonators
+      - physical impact exciter
+      - hollow-body cavity
+      - friction tail
+    """
+    if body_bands is None:
+        body_bands = [
+            (300.0, 100.0, 0.50),
+            (650.0, 180.0, 0.30),
+        ]
+
+    modal = _ac_modal(
+        duration,
+        base,
+        ratios,
+        gains,
+        taus,
+        rng=rng,
+        detune=0.003,
+    )
+
+    impact_fm = _ac_fm_impact(
+        rng,
+        duration,
+        exciter_high,
+        exciter_low * 0.8,
+        mod_ratio=2.2,
+        index0=5.2,
+        drive=drive * 0.80,
+    )
+
+    impact_noise = _ac_noise_burst(
+        rng,
+        duration,
+        low=exciter_low,
+        high=exciter_high,
+        drive=drive * 0.70,
+    )
+
+    exciter = mix(
+        [
+            (impact_fm, 0.70),
+            (impact_noise, exciter_gain),
+        ]
+    ) * _ac_delayed_decay(duration, 0.0, 0.004, attack_s=0.00015)
+
+    cavity = _ac_cavity(rng, duration, body_bands, drive=drive * 0.55)
+    cavity *= _ac_delayed_decay(
+        duration,
+        0.003,
+        max(0.012, duration / 3.5),
+        attack_s=0.0003,
+    )
+    cavity *= float(body_gain)
+
+    friction = lowpass(_ac_brown_noise(rng, duration), 1200.0)
+    friction *= _ac_delayed_decay(
+        duration,
+        0.005,
+        max(0.010, duration / 5.0),
+        attack_s=0.0003,
+    )
+    friction *= 0.08
+
+    y = mix(
+        [
+            (modal, 0.88),
+            (exciter, 1.0),
+            (cavity, 1.0),
+            (friction, 1.0),
+        ]
+    )
+
+    if highpass_cutoff > 0.0:
+        y = highpass(y, highpass_cutoff)
+
+    if lowpass_cutoff > 0.0:
+        y = lowpass(y, min(lowpass_cutoff, SAMPLE_RATE / 2.0 - 300.0))
+
+    y = _ac_softsat(y, max(1.2, drive * 0.35))
+
+    return _ac_final(y)
+
+
+def _ac_ks_pluck(
     rng: np.random.Generator,
     freq: float,
     duration: float,
     brightness: float = 0.5,
     damping: float | None = None,
+    dispersion: float = 0.20,
 ) -> np.ndarray:
     """
-    Simple Karplus-Strong plucked-string model.
+    Karplus-Strong plucked string with a simple first-order dispersion allpass.
 
-    This is intentionally lightweight and stable for very short typing sounds.
+    The allpass adds subtle phase dispersion, making nylon/string attacks less
+    "delay-line synthetic" and more physically flexible.
     """
     freq = max(20.0, float(freq))
     brightness = float(np.clip(brightness, 0.0, 1.0))
@@ -1418,10 +979,9 @@ def _ks_pluck(
     n_out = max(1, int(round(duration * SAMPLE_RATE)))
     period = max(2, int(round(SAMPLE_RATE / freq)))
 
-    # Initial excitation: short noise burst inside the delay line.
+    # Initial excitation: low-smoothed noise burst.
     buf = rng.uniform(-1.0, 1.0, period)
 
-    # Warm the initial noise slightly.
     for _ in range(2):
         buf = 0.5 * (buf + np.roll(buf, 1))
 
@@ -1429,194 +989,453 @@ def _ks_pluck(
         damping = 0.986 + 0.012 * brightness
 
     damping = float(np.clip(damping, 0.970, 0.999))
+    a = float(np.clip(dispersion, 0.0, 0.55))
 
     out = np.empty(n_out, dtype=np.float64)
+
     idx = 0
+    prev_x = 0.0
+    prev_y = 0.0
 
     for i in range(n_out):
-        out[i] = buf[idx]
+        x = float(buf[idx])
+
+        # First-order allpass:
+        # y[n] = a*x[n] + x[n-1] - a*y[n-1]
+        y_ap = a * x + prev_x - a * prev_y
+        prev_x = x
+        prev_y = y_ap
 
         nxt = (idx + 1) % period
-        buf[idx] = damping * 0.5 * (buf[idx] + buf[nxt])
 
+        # Lowpass / averaging string junction.
+        buf[idx] = damping * 0.5 * (y_ap + float(buf[nxt]))
+
+        out[i] = x
         idx = nxt
 
     out -= float(np.mean(out))
     return out
 
 
-# ----------------------------------------------------------------------------
-# 1. Acoustic Grand Piano
-# ----------------------------------------------------------------------------
-
-def build_grand_piano(rng: np.random.Generator) -> Dict[str, Dict]:
+def _ac_piano_note(
+    rng: np.random.Generator,
+    freq: float,
+    duration: float,
+    brightness: float = 1.0,
+    hammer_gain: float = 0.42,
+    body_gain: float = 0.22,
+) -> np.ndarray:
     """
-    Felt hammer strike with multi-harmonic steel string resonance and short
-    staccato decay suitable for typing.
+    Short piano note:
+      - inharmonic steel string partials
+      - felt hammer compression transient
+      - soundboard / cavity resonance
     """
+    beta = 0.00042
 
-    def piano_note(
-        r: np.random.Generator,
-        freq: float,
-        duration: float,
-        brightness: float = 1.0,
-        hammer_gain: float = 0.35,
-        body_gain: float = 0.12,
-    ) -> np.ndarray:
-        brightness = float(np.clip(brightness, 0.0, 1.25))
+    ratios: List[float] = []
+    gains: List[float] = []
+    taus: List[float] = []
 
-        # Slightly inharmonic piano partials.
-        beta = 0.00035
-        ratios: List[float] = []
-        gains: List[float] = []
-        taus: List[float] = []
+    base_gains = [
+        1.00,
+        0.52,
+        0.30,
+        0.18,
+        0.11,
+        0.065,
+    ]
 
-        base_gains = [
-            1.00,
-            0.55,
-            0.32,
-            0.20,
-            0.12,
-            0.075,
+    for n in range(1, 7):
+        ratio = n * (1.0 + beta * n * n)
+        gain = base_gains[n - 1] * (0.72 + 0.28 * float(brightness))
+        tau = duration / (2.1 + 0.55 * n)
+
+        ratios.append(ratio)
+        gains.append(gain)
+        taus.append(tau)
+
+    strings = _ac_modal(
+        duration,
+        freq,
+        ratios,
+        gains,
+        taus,
+        rng=rng,
+        detune=0.002,
+    )
+
+    hammer_high = min(12000.0, max(900.0, freq * 7.0))
+    hammer_low = max(120.0, freq * 1.3)
+
+    hammer_fm = _ac_fm_impact(
+        rng,
+        duration,
+        hammer_high,
+        hammer_low,
+        mod_ratio=1.7,
+        index0=4.6,
+        drive=2.3,
+    )
+
+    hammer_noise = _ac_noise_burst(
+        rng,
+        duration,
+        low=hammer_low,
+        high=min(12000.0, hammer_high * 1.2),
+        drive=2.1,
+    )
+
+    hammer = mix(
+        [
+            (hammer_fm, 0.68),
+            (hammer_noise, 0.55),
         ]
+    ) * _ac_delayed_decay(duration, 0.0, 0.003, attack_s=0.00015)
 
-        for n in range(1, 7):
-            ratio = n * (1.0 + beta * n * n)
-            gain = base_gains[n - 1] * (0.75 + 0.25 * brightness)
-            tau = duration / (2.4 + 0.5 * n)
+    hammer *= float(hammer_gain)
 
-            ratios.append(ratio)
-            gains.append(gain)
-            taus.append(tau)
+    soundboard = _ac_cavity(
+        rng,
+        duration,
+        [
+            (110.0, 45.0, 0.50),
+            (320.0, 95.0, 0.40),
+            (560.0, 150.0, 0.30),
+        ],
+        drive=1.6,
+    )
 
-        strings = _modal_layers(
-            duration,
-            freq,
-            ratios,
-            gains,
-            taus,
-            rng=r,
-            detune=0.002,
-        )
+    soundboard *= _ac_delayed_decay(
+        duration,
+        0.003,
+        max(0.012, duration / 3.2),
+        attack_s=0.0003,
+    )
 
-        hammer = _transient_noise(
+    soundboard *= float(body_gain)
+
+    y = mix(
+        [
+            (strings, 0.86),
+            (hammer, 1.0),
+            (soundboard, 1.0),
+        ]
+    )
+
+    y = lowpass(y, 8200.0)
+    y = highpass(y, 35.0)
+    y = _ac_softsat(y, 1.45)
+
+    return _ac_final(y)
+
+
+def _ac_guitar_note(
+    rng: np.random.Generator,
+    freq: float,
+    duration: float,
+    brightness: float = 0.55,
+    body_gain: float = 0.35,
+    pick_gain: float = 0.28,
+) -> np.ndarray:
+    """
+    Nylon guitar pluck:
+      - Karplus-Strong string
+      - dispersion allpass
+      - guitar wood cavity resonances around 105 Hz and 220 Hz
+      - soft finger/pick transient
+    """
+    string = _ac_ks_pluck(
+        rng,
+        freq,
+        duration,
+        brightness=brightness,
+        dispersion=0.22,
+    )
+
+    string = lowpass(string, 5200.0)
+    string = highpass(string, 60.0)
+
+    body_air = _ac_cavity(
+        rng,
+        duration,
+        [
+            (105.0, 24.0, 0.75),
+            (220.0, 48.0, 0.55),
+        ],
+        drive=1.6,
+    )
+
+    body_air *= _ac_delayed_decay(
+        duration,
+        0.003,
+        max(0.012, duration / 3.6),
+        attack_s=0.0003,
+    )
+
+    body_air *= 0.45
+
+    string_body = mix(
+        [
+            (bandpass(string, 92.0, 128.0, order=2), 0.50),
+            (bandpass(string, 185.0, 255.0, order=2), 0.40),
+        ]
+    )
+
+    string_body *= float(body_gain)
+
+    pick = _ac_noise_burst(
+        rng,
+        duration,
+        low=1800.0,
+        high=5200.0,
+        drive=2.0,
+    )
+
+    pick *= _ac_delayed_decay(duration, 0.0, 0.0025, attack_s=0.00012)
+    pick *= float(pick_gain)
+
+    y = mix(
+        [
+            (string, 0.92),
+            (body_air, 1.0),
+            (string_body, 1.0),
+            (pick, 1.0),
+        ]
+    )
+
+    y = lowpass(y, 6400.0)
+    y = highpass(y, 52.0)
+    y = _ac_softsat(y, 1.4)
+
+    return _ac_final(y)
+
+
+def _ac_pizz_note(
+    rng: np.random.Generator,
+    freq: float,
+    duration: float,
+    brightness: float = 0.68,
+    chamber_gain: float = 0.35,
+) -> np.ndarray:
+    """
+    Orchestral pizzicato:
+      - flesh finger pluck noise burst
+      - coupled string vibration
+      - wooden chamber resonance
+    """
+    string = _ac_ks_pluck(
+        rng,
+        freq,
+        duration,
+        brightness=brightness,
+        dispersion=0.16,
+    )
+
+    string = lowpass(string, 7200.0)
+    string = highpass(string, 75.0)
+
+    finger = _ac_noise_burst(
+        rng,
+        duration,
+        low=700.0,
+        high=2600.0,
+        drive=2.0,
+    )
+
+    finger *= _ac_delayed_decay(duration, 0.0, 0.003, attack_s=0.00015)
+    finger *= 0.45
+
+    body = _ac_cavity(
+        rng,
+        duration,
+        [
+            (260.0, 85.0, 0.55),
+            (480.0, 150.0, 0.38),
+        ],
+        drive=1.6,
+    )
+
+    body *= _ac_delayed_decay(
+        duration,
+        0.003,
+        max(0.012, duration / 3.5),
+        attack_s=0.0003,
+    )
+
+    body *= float(chamber_gain)
+
+    wood = lowpass(_ac_brown_noise(rng, duration), 850.0)
+    wood *= _ac_delayed_decay(
+        duration,
+        0.004,
+        max(0.010, duration / 4.5),
+        attack_s=0.0003,
+    )
+    wood *= 0.12
+
+    y = mix(
+        [
+            (string, 0.92),
+            (finger, 1.0),
+            (body, 1.0),
+            (wood, 1.0),
+        ]
+    )
+
+    y = lowpass(y, 7600.0)
+    y = highpass(y, 65.0)
+    y = _ac_softsat(y, 1.45)
+
+    return _ac_final(y)
+
+
+# ----------------------------------------------------------------------------
+# 1. Deep Thock — Gateron Oil King
+# ----------------------------------------------------------------------------
+
+def build_gateron_oil_king(rng: np.random.Generator) -> Dict[str, Dict]:
+    """
+    Muffled, deep, lubricated downstroke with low-frequency acoustic cavity pop.
+    """
+
+    def thock(
+        r: np.random.Generator,
+        duration: float,
+        bottom: float,
+        cavity_a: float,
+        cavity_b: float,
+        click_gain: float = 0.22,
+        spring_gain: float = 0.03,
+        lp: float = 3200.0,
+    ) -> np.ndarray:
+        return _ac_switch_hit(
             r,
-            0.006,
-            high=1800.0,
-            tau=0.002,
-        )
-
-        body = _transient_noise(
-            r,
             duration,
-            low=140.0,
-            high=900.0,
-            tau=duration / 3.0,
+            bottom=bottom,
+            cavity_bands=[
+                (cavity_a, 85.0, 0.72),
+                (cavity_b, 140.0, 0.45),
+            ],
+            click_low=1100.0,
+            click_high=2500.0,
+            click_gain=click_gain,
+            bottom_gain=0.96,
+            spring_freq=820.0,
+            spring_gain=spring_gain,
+            drive=2.5,
+            lowpass_cutoff=lp,
+            highpass_cutoff=32.0,
         )
-
-        y = mix(
-            [
-                (strings, 0.85),
-                (hammer, hammer_gain),
-                (body, body_gain),
-            ]
-        )
-
-        y = lowpass(y, 7600.0)
-        y = highpass(y, 38.0)
-
-        return finalize(y)
 
     def default_variant(i: int) -> np.ndarray:
         r = child_rng(rng, 10 + i)
 
-        freq = float(
-            r.choice(
-                [
-                    261.63,  # C4
-                    293.66,  # D4
-                    329.63,  # E4
-                    349.23,  # F4
-                ]
-            )
-        ) * float(r.uniform(0.995, 1.005))
+        bottom = float(r.uniform(125.0, 180.0))
+        duration = float(r.uniform(0.062, 0.082))
+        cavity_a = float(r.uniform(180.0, 260.0))
+        cavity_b = float(r.uniform(320.0, 430.0))
+        click_gain = float(r.uniform(0.16, 0.26))
+        spring_gain = float(r.uniform(0.02, 0.04))
+        lp = float(r.uniform(2800.0, 3600.0))
 
-        duration = float(r.uniform(0.080, 0.100))
-        brightness = float(r.uniform(0.85, 1.0))
+        return thock(
+            r,
+            duration,
+            bottom,
+            cavity_a,
+            cavity_b,
+            click_gain,
+            spring_gain,
+            lp,
+        )
 
-        return piano_note(r, freq, duration, brightness=brightness)
-
-    space = piano_note(
-        child_rng(rng, 20),
-        98.0,
-        0.130,
-        brightness=0.80,
-        hammer_gain=0.28,
-        body_gain=0.20,
+    r_space = child_rng(rng, 20)
+    space = thock(
+        r_space,
+        0.105,
+        float(r_space.uniform(80.0, 100.0)),
+        150.0,
+        285.0,
+        click_gain=0.15,
+        spring_gain=0.02,
+        lp=2500.0,
     )
 
     r_delete = child_rng(rng, 21)
-    delete = piano_note(
+    delete = thock(
         r_delete,
-        float(r_delete.uniform(740.0, 880.0)),
         0.042,
-        brightness=1.10,
-        hammer_gain=0.45,
-        body_gain=0.06,
+        225.0,
+        330.0,
+        520.0,
+        click_gain=0.30,
+        spring_gain=0.035,
+        lp=4300.0,
     )
 
-    r_return_a = child_rng(rng, 22)
-    r_return_b = child_rng(rng, 23)
+    r_ret_a = child_rng(rng, 22)
+    r_ret_b = child_rng(rng, 23)
 
-    return_note_a = piano_note(
-        r_return_a,
-        392.0,
-        0.095,
-        brightness=0.95,
-        hammer_gain=0.38,
-        body_gain=0.10,
+    ret_a = thock(
+        r_ret_a,
+        0.080,
+        135.0,
+        210.0,
+        330.0,
+        click_gain=0.20,
+        spring_gain=0.03,
+        lp=3100.0,
     )
 
-    return_note_b = piano_note(
-        r_return_b,
-        587.33,
-        0.075,
-        brightness=1.0,
-        hammer_gain=0.35,
-        body_gain=0.08,
+    ret_b = thock(
+        r_ret_b,
+        0.046,
+        210.0,
+        320.0,
+        500.0,
+        click_gain=0.26,
+        spring_gain=0.03,
+        lp=3900.0,
     )
 
-    ret = add_delayed(return_note_a, return_note_b, 0.018, 0.90)
-    ret = finalize(ret)
+    ret = _ac_final(add_delayed(ret_a, ret_b, 0.020, 0.75))
 
-    shift = piano_note(
+    shift = thock(
         child_rng(rng, 24),
-        1567.98,
         0.035,
-        brightness=1.15,
-        hammer_gain=0.50,
-        body_gain=0.04,
+        320.0,
+        430.0,
+        620.0,
+        click_gain=0.32,
+        spring_gain=0.04,
+        lp=4800.0,
     )
 
-    symbol_a = piano_note(
+    symbol_a = thock(
         child_rng(rng, 25),
-        987.77,
         0.035,
-        brightness=1.05,
-        hammer_gain=0.42,
-        body_gain=0.05,
+        205.0,
+        310.0,
+        470.0,
+        click_gain=0.26,
+        spring_gain=0.03,
+        lp=3700.0,
     )
 
-    symbol_b = piano_note(
+    symbol_b = thock(
         child_rng(rng, 26),
-        1174.66,
-        0.035,
-        brightness=1.05,
-        hammer_gain=0.42,
-        body_gain=0.05,
+        0.032,
+        260.0,
+        370.0,
+        560.0,
+        click_gain=0.28,
+        spring_gain=0.03,
+        lp=4100.0,
     )
 
-    symbol = finalize(concat([symbol_a, symbol_b], gap_s=0.010))
+    symbol = _ac_final(concat([symbol_a, symbol_b], gap_s=0.010))
 
     return {
         "keypress.default": ev([default_variant(i) for i in range(3)], "random", 1.0),
@@ -1629,158 +1448,136 @@ def build_grand_piano(rng: np.random.Generator) -> Dict[str, Dict]:
 
 
 # ----------------------------------------------------------------------------
-# 2. Acoustic Nylon Guitar Pluck
+# 2. Crisp Click — Kailh Box Jade
 # ----------------------------------------------------------------------------
 
-def build_nylon_guitar(rng: np.random.Generator) -> Dict[str, Dict]:
+def build_kailh_box_jade(rng: np.random.Generator) -> Dict[str, Dict]:
     """
-    Karplus-Strong plucked string with warm wooden body resonance.
+    Ultra-crisp dual-click tactile mechanism with high-Q resonance.
     """
 
-    def guitar_note(
+    def crisp(
         r: np.random.Generator,
-        freq: float,
         duration: float,
-        brightness: float = 0.55,
-        body_gain: float = 0.30,
-        pick_gain: float = 0.25,
+        low: float,
+        high: float,
+        bottom: float = 320.0,
+        second_delay: float = 0.0,
+        second_gain: float = 0.0,
+        lp: float = 9800.0,
+        click_gain: float = 0.78,
     ) -> np.ndarray:
-        string = _ks_pluck(r, freq, duration, brightness=brightness)
-        string = lowpass(string, 5200.0)
-        string = highpass(string, 60.0)
-
-        body = _transient_noise(
+        return _ac_switch_hit(
             r,
             duration,
-            low=95.0,
-            high=320.0,
-            tau=duration / 3.5,
+            bottom=bottom,
+            cavity_bands=[
+                (4200.0, 420.0, 0.32),
+                (5300.0, 520.0, 0.28),
+            ],
+            click_low=low,
+            click_high=high,
+            click_gain=click_gain,
+            bottom_gain=0.35,
+            spring_freq=5200.0,
+            spring_gain=0.05,
+            drive=3.0,
+            lowpass_cutoff=lp,
+            highpass_cutoff=850.0,
+            second_click_delay=second_delay,
+            second_click_gain=second_gain,
         )
-
-        wood = _transient_noise(
-            r,
-            duration,
-            low=700.0,
-            tau=duration / 5.0,
-        )
-
-        pick = _transient_noise(
-            r,
-            0.005,
-            high=2600.0,
-            tau=0.002,
-        )
-
-        y = mix(
-            [
-                (string, 0.92),
-                (body, body_gain),
-                (wood, 0.16),
-                (pick, pick_gain),
-            ]
-        )
-
-        y = lowpass(y, 6500.0)
-        y = highpass(y, 55.0)
-
-        return finalize(y)
 
     def default_variant(i: int) -> np.ndarray:
         r = child_rng(rng, 10 + i)
 
-        freq = float(
-            r.choice(
-                [
-                    196.00,    # G3
-                    246.94,    # B3
-                    329.63,    # E4
-                ]
-            )
-        ) * float(r.uniform(0.996, 1.004))
+        duration = float(r.uniform(0.045, 0.058))
+        low = float(r.uniform(3800.0, 4500.0))
+        high = float(r.uniform(5000.0, 5500.0))
+        bottom = float(r.uniform(280.0, 380.0))
+        second_delay = float(r.uniform(0.010, 0.014))
+        second_gain = float(r.uniform(0.70, 0.80))
 
-        duration = float(r.uniform(0.085, 0.105))
-        brightness = float(r.uniform(0.45, 0.65))
-
-        return guitar_note(
+        return crisp(
             r,
-            freq,
             duration,
-            brightness=brightness,
-            body_gain=float(r.uniform(0.26, 0.34)),
-            pick_gain=float(r.uniform(0.20, 0.30)),
+            low,
+            high,
+            bottom=bottom,
+            second_delay=second_delay,
+            second_gain=second_gain,
         )
 
-    space = guitar_note(
-        child_rng(rng, 20),
-        82.41,
-        0.130,
-        brightness=0.35,
-        body_gain=0.45,
-        pick_gain=0.16,
+    r_space = child_rng(rng, 20)
+    space = crisp(
+        r_space,
+        0.085,
+        2500.0,
+        4000.0,
+        bottom=220.0,
+        second_delay=0.018,
+        second_gain=0.55,
+        lp=8200.0,
+        click_gain=0.65,
     )
 
     r_delete = child_rng(rng, 21)
-    delete = guitar_note(
+    delete = crisp(
         r_delete,
-        float(r_delete.uniform(659.0, 784.0)),
-        0.045,
-        brightness=0.80,
-        body_gain=0.12,
-        pick_gain=0.35,
+        0.036,
+        4500.0,
+        6200.0,
+        bottom=430.0,
+        second_delay=0.0,
+        second_gain=0.0,
+        lp=10500.0,
+        click_gain=0.82,
     )
 
-    r_return_a = child_rng(rng, 22)
-    r_return_b = child_rng(rng, 23)
-
-    return_root = guitar_note(
-        r_return_a,
-        196.0,
-        0.075,
-        brightness=0.52,
-        body_gain=0.32,
-        pick_gain=0.24,
+    r_return = child_rng(rng, 22)
+    ret = crisp(
+        r_return,
+        0.090,
+        3600.0,
+        5200.0,
+        bottom=300.0,
+        second_delay=0.024,
+        second_gain=0.85,
+        lp=9600.0,
+        click_gain=0.75,
     )
 
-    return_fifth = guitar_note(
-        r_return_b,
-        293.66,
-        0.060,
-        brightness=0.58,
-        body_gain=0.28,
-        pick_gain=0.24,
+    shift = crisp(
+        child_rng(rng, 23),
+        0.033,
+        5000.0,
+        6500.0,
+        bottom=480.0,
+        lp=10800.0,
+        click_gain=0.85,
     )
 
-    ret = add_delayed(return_root, return_fifth, 0.020, 0.90)
-    ret = finalize(ret)
-
-    shift = guitar_note(
+    symbol_a = crisp(
         child_rng(rng, 24),
-        1174.66,
-        0.035,
-        brightness=0.85,
-        body_gain=0.10,
-        pick_gain=0.35,
+        0.032,
+        4700.0,
+        6100.0,
+        bottom=430.0,
+        lp=10500.0,
+        click_gain=0.80,
     )
 
-    symbol_a = guitar_note(
+    symbol_b = crisp(
         child_rng(rng, 25),
-        880.0,
-        0.035,
-        brightness=0.72,
-        body_gain=0.14,
-        pick_gain=0.30,
+        0.030,
+        5200.0,
+        6600.0,
+        bottom=470.0,
+        lp=11000.0,
+        click_gain=0.80,
     )
 
-    symbol_b = guitar_note(
-        child_rng(rng, 26),
-        987.77,
-        0.035,
-        brightness=0.72,
-        body_gain=0.14,
-        pick_gain=0.30,
-    )
-
-    symbol = finalize(concat([symbol_a, symbol_b], gap_s=0.008))
+    symbol = _ac_final(concat([symbol_a, symbol_b], gap_s=0.010))
 
     return {
         "keypress.default": ev([default_variant(i) for i in range(3)], "random", 1.0),
@@ -1793,196 +1590,1268 @@ def build_nylon_guitar(rng: np.random.Generator) -> Dict[str, Dict]:
 
 
 # ----------------------------------------------------------------------------
-# 3. Kerala Chenda
+# 3. Tactile Pop — Holy Panda
 # ----------------------------------------------------------------------------
 
-def build_kerala_chenda(rng: np.random.Generator) -> Dict[str, Dict]:
+def build_holy_panda(rng: np.random.Generator) -> Dict[str, Dict]:
     """
-    High-tension cylindrical wooden drum with cane stick strike, rim crack,
-    and deep resonant body tone.
+    Rounded tactile bump followed by a sharp bottom-out pop.
     """
 
-    def chenda_hit(
+    def pop(
         r: np.random.Generator,
-        base: float,
         duration: float,
-        stick_gain: float = 0.55,
-        rim_gain: float = 0.25,
-        body_gain: float = 0.45,
-        deep_gain: float = 0.35,
+        bottom: float,
+        low: float,
+        high: float,
+        second_delay: float,
+        second_gain: float,
+        lp: float = 6500.0,
     ) -> np.ndarray:
-        shell = _modal_layers(
+        return _ac_switch_hit(
+            r,
             duration,
-            base,
-            ratios=[1.0, 1.50, 2.02, 2.71],
-            gains=[0.75, 0.35, 0.25, 0.15],
-            taus=[
-                duration / 3.2,
-                duration / 4.0,
-                duration / 5.0,
-                duration / 6.0,
+            bottom=bottom,
+            cavity_bands=[
+                (240.0, 90.0, 0.55),
+                (390.0, 130.0, 0.38),
+            ],
+            click_low=low,
+            click_high=high,
+            click_gain=0.48,
+            bottom_gain=0.88,
+            spring_freq=1250.0,
+            spring_gain=0.06,
+            drive=2.7,
+            lowpass_cutoff=lp,
+            highpass_cutoff=70.0,
+            second_click_delay=second_delay,
+            second_click_gain=second_gain,
+        )
+
+    def default_variant(i: int) -> np.ndarray:
+        r = child_rng(rng, 10 + i)
+
+        duration = float(r.uniform(0.060, 0.080))
+        bottom = float(r.uniform(225.0, 320.0))
+        low = float(r.uniform(1400.0, 2000.0))
+        high = float(r.uniform(2500.0, 3400.0))
+        second_delay = float(r.uniform(0.011, 0.015))
+        second_gain = float(r.uniform(0.58, 0.66))
+
+        return pop(
+            r,
+            duration,
+            bottom,
+            low,
+            high,
+            second_delay,
+            second_gain,
+        )
+
+    r_space = child_rng(rng, 20)
+    space = pop(
+        r_space,
+        0.100,
+        155.0,
+        1000.0,
+        2100.0,
+        second_delay=0.016,
+        second_gain=0.50,
+        lp=5500.0,
+    )
+
+    r_delete = child_rng(rng, 21)
+    delete = pop(
+        r_delete,
+        0.040,
+        380.0,
+        2100.0,
+        3800.0,
+        second_delay=0.0,
+        second_gain=0.0,
+        lp=7500.0,
+    )
+
+    r_return = child_rng(rng, 22)
+    ret = pop(
+        r_return,
+        0.090,
+        245.0,
+        1500.0,
+        2800.0,
+        second_delay=0.020,
+        second_gain=0.72,
+        lp=6200.0,
+    )
+
+    shift = pop(
+        child_rng(rng, 23),
+        0.034,
+        430.0,
+        2300.0,
+        4100.0,
+        second_delay=0.0,
+        second_gain=0.0,
+        lp=7800.0,
+    )
+
+    symbol_a = pop(
+        child_rng(rng, 24),
+        0.034,
+        330.0,
+        1900.0,
+        3300.0,
+        second_delay=0.0,
+        second_gain=0.0,
+        lp=7000.0,
+    )
+
+    symbol_b = pop(
+        child_rng(rng, 25),
+        0.032,
+        390.0,
+        2200.0,
+        3700.0,
+        second_delay=0.0,
+        second_gain=0.0,
+        lp=7400.0,
+    )
+
+    symbol = _ac_final(concat([symbol_a, symbol_b], gap_s=0.010))
+
+    return {
+        "keypress.default": ev([default_variant(i) for i in range(3)], "random", 1.0),
+        "keypress.space": ev([space], "single", 1.0),
+        "keypress.delete": ev([delete], "single", 0.95),
+        "keypress.return": ev([ret], "single", 0.95),
+        "keypress.shift": ev([shift], "single", 0.90),
+        "keypress.symbol": ev([symbol], "single", 0.90),
+    }
+
+
+# ----------------------------------------------------------------------------
+# 4. Mechanical Click — IBM Model M
+# ----------------------------------------------------------------------------
+
+def build_ibm_model_m(rng: np.random.Generator) -> Dict[str, Dict]:
+    """
+    Buckling spring snap with metallic ping and heavy solenoid/frame thud.
+    """
+
+    def model_m_hit(
+        r: np.random.Generator,
+        duration: float,
+        thud: float,
+        click_low: float,
+        click_high: float,
+        metal_gain: float = 0.35,
+        second_delay: float = 0.008,
+        second_gain: float = 0.45,
+        lp: float = 10500.0,
+    ) -> np.ndarray:
+        base = _ac_switch_hit(
+            r,
+            duration,
+            bottom=thud,
+            cavity_bands=[
+                (360.0, 130.0, 0.42),
+                (950.0, 240.0, 0.30),
+            ],
+            click_low=click_low,
+            click_high=click_high,
+            click_gain=0.62,
+            bottom_gain=0.95,
+            spring_freq=2350.0,
+            spring_gain=0.12,
+            drive=3.2,
+            lowpass_cutoff=lp,
+            highpass_cutoff=65.0,
+            second_click_delay=second_delay,
+            second_click_gain=second_gain,
+        )
+
+        metal_freq = float(r.uniform(2600.0, 3300.0))
+
+        metal = _ac_modal(
+            duration,
+            metal_freq,
+            [1.0, 1.42, 1.92, 2.45],
+            [0.30, 0.20, 0.14, 0.10],
+            [
+                duration / 5.5,
+                duration / 6.5,
+                duration / 7.5,
+                duration / 8.5,
             ],
             rng=r,
-            detune=0.006,
+            detune=0.005,
         )
 
-        deep = tone(duration, base * 0.52, base * 0.46, wave="sine", curve="exp")
-        deep *= decay_env(duration, duration / 3.5)
-
-        stick = _transient_noise(
-            r,
-            0.006,
-            high=2400.0,
-            tau=0.002,
-        )
-
-        rim = _transient_noise(
-            r,
-            0.005,
-            low=3200.0,
-            high=6500.0,
-            tau=0.0018,
-        )
-
-        resonance = _transient_noise(
-            r,
+        metal *= _ac_delayed_decay(
             duration,
-            low=280.0,
-            high=900.0,
-            tau=duration / 4.0,
+            0.004,
+            max(0.010, duration / 6.5),
+            attack_s=0.0002,
         )
+
+        metal *= float(metal_gain)
 
         y = mix(
             [
-                (shell, 0.65),
-                (deep, deep_gain),
-                (stick, stick_gain),
-                (rim, rim_gain),
-                (resonance, body_gain * 0.35),
+                (base, 1.0),
+                (metal, 1.0),
             ]
         )
 
-        y = highpass(y, 65.0)
-        y = lowpass(y, 9500.0)
+        return _ac_final(y)
 
-        return finalize(y)
+    def default_variant(i: int) -> np.ndarray:
+        r = child_rng(rng, 10 + i)
 
-    def rim_crack(
+        duration = float(r.uniform(0.080, 0.100))
+        thud = float(r.uniform(75.0, 100.0))
+        click_low = float(r.uniform(2400.0, 3000.0))
+        click_high = float(r.uniform(4800.0, 5600.0))
+        metal_gain = float(r.uniform(0.30, 0.40))
+
+        return model_m_hit(
+            r,
+            duration,
+            thud,
+            click_low,
+            click_high,
+            metal_gain=metal_gain,
+        )
+
+    r_space = child_rng(rng, 20)
+    space = model_m_hit(
+        r_space,
+        0.105,
+        float(r_space.uniform(58.0, 72.0)),
+        1800.0,
+        4200.0,
+        metal_gain=0.28,
+        second_delay=0.010,
+        second_gain=0.50,
+        lp=9200.0,
+    )
+
+    r_delete = child_rng(rng, 21)
+    delete = model_m_hit(
+        r_delete,
+        0.045,
+        120.0,
+        3200.0,
+        6200.0,
+        metal_gain=0.40,
+        second_delay=0.0,
+        second_gain=0.25,
+        lp=11000.0,
+    )
+
+    r_return = child_rng(rng, 22)
+    ret = model_m_hit(
+        r_return,
+        0.100,
+        85.0,
+        2200.0,
+        5000.0,
+        metal_gain=0.40,
+        second_delay=0.018,
+        second_gain=0.60,
+        lp=10000.0,
+    )
+
+    shift = model_m_hit(
+        child_rng(rng, 23),
+        0.036,
+        160.0,
+        3500.0,
+        6500.0,
+        metal_gain=0.50,
+        second_delay=0.0,
+        second_gain=0.20,
+        lp=11500.0,
+    )
+
+    symbol_a = model_m_hit(
+        child_rng(rng, 24),
+        0.034,
+        150.0,
+        3300.0,
+        6200.0,
+        metal_gain=0.45,
+        second_delay=0.0,
+        second_gain=0.20,
+        lp=11200.0,
+    )
+
+    symbol_b = model_m_hit(
+        child_rng(rng, 25),
+        0.032,
+        180.0,
+        3700.0,
+        6600.0,
+        metal_gain=0.45,
+        second_delay=0.0,
+        second_gain=0.20,
+        lp=11600.0,
+    )
+
+    symbol = _ac_final(concat([symbol_a, symbol_b], gap_s=0.011))
+
+    return {
+        "keypress.default": ev([default_variant(i) for i in range(3)], "random", 1.0),
+        "keypress.space": ev([space], "single", 1.0),
+        "keypress.delete": ev([delete], "single", 0.95),
+        "keypress.return": ev([ret], "single", 0.95),
+        "keypress.shift": ev([shift], "single", 0.90),
+        "keypress.symbol": ev([symbol], "single", 0.90),
+    }
+
+
+# ----------------------------------------------------------------------------
+# 5. Typewriter — Classic Royal
+# ----------------------------------------------------------------------------
+
+def build_royal_typewriter(rng: np.random.Generator) -> Dict[str, Dict]:
+    """
+    Cast-iron typebar strike, ratchet spacebar, and mechanical bell return.
+    """
+
+    def typebar_hit(
         r: np.random.Generator,
         duration: float,
-        freq: float = 3800.0,
+        base: float = 1.0,
+        metal_gain: float = 0.45,
     ) -> np.ndarray:
-        crack = _transient_noise(
+        impact = _ac_fm_impact(
             r,
             duration,
-            low=2500.0,
-            high=7000.0,
-            tau=duration / 2.8,
+            3800.0 * base,
+            1200.0 * base,
+            mod_ratio=2.1,
+            index0=5.5,
+            drive=3.0,
         )
 
-        body = _transient_noise(
+        impact_noise = _ac_noise_burst(
             r,
             duration,
-            low=250.0,
-            high=700.0,
-            tau=duration / 4.0,
+            low=1800.0 * base,
+            high=6500.0 * base,
+            drive=2.6,
         )
 
-        click = tone(duration, freq, freq * 0.80, wave="sine", curve="exp")
-        click *= decay_env(duration, duration / 6.0)
+        strike = mix(
+            [
+                (impact, 0.70),
+                (impact_noise, 0.60),
+            ]
+        ) * _ac_delayed_decay(duration, 0.0, 0.004, attack_s=0.00015)
+
+        body = _ac_cavity(
+            r,
+            duration,
+            [
+                (320.0, 110.0, 0.50),
+                (720.0, 200.0, 0.35),
+            ],
+            drive=1.8,
+        )
+
+        body *= _ac_delayed_decay(
+            duration,
+            0.003,
+            max(0.012, duration / 4.0),
+            attack_s=0.0003,
+        )
+
+        body *= 0.5
+
+        metal = _ac_modal(
+            duration,
+            2800.0 * base,
+            [1.0, 1.55, 2.18, 2.95],
+            [0.35, 0.22, 0.15, 0.10],
+            [
+                duration / 5.0,
+                duration / 6.0,
+                duration / 7.0,
+                duration / 8.0,
+            ],
+            rng=r,
+            detune=0.005,
+        )
+
+        metal *= _ac_delayed_decay(
+            duration,
+            0.002,
+            max(0.010, duration / 6.0),
+            attack_s=0.0002,
+        )
+
+        metal *= float(metal_gain)
 
         y = mix(
             [
-                (crack, 0.80),
-                (body, 0.25),
-                (click, 0.18),
+                (strike, 1.0),
+                (body, 1.0),
+                (metal, 1.0),
+            ]
+        )
+
+        y = highpass(y, 220.0)
+        y = lowpass(y, 10000.0)
+        y = _ac_softsat(y, 1.6)
+
+        return _ac_final(y)
+
+    def default_variant(i: int) -> np.ndarray:
+        r = child_rng(rng, 10 + i)
+
+        duration = float(r.uniform(0.050, 0.070))
+        base = float(r.uniform(0.90, 1.10))
+        metal_gain = float(r.uniform(0.38, 0.50))
+
+        return typebar_hit(r, duration, base=base, metal_gain=metal_gain)
+
+    def space_ratchet() -> np.ndarray:
+        r = child_rng(rng, 20)
+        duration = 0.105
+
+        layers: List[Tuple[np.ndarray, float]] = []
+
+        carriage = _ac_fm_impact(
+            r,
+            duration,
+            190.0,
+            65.0,
+            mod_ratio=1.2,
+            index0=3.5,
+            drive=2.2,
+        )
+
+        carriage *= _ac_delayed_decay(duration, 0.0, 0.035, attack_s=0.0003)
+        carriage *= 0.65
+
+        layers.append((carriage, 1.0))
+
+        for i, delay in enumerate([0.0, 0.024, 0.048]):
+            rr = child_rng(r, 30 + i)
+
+            tick_noise = _ac_noise_burst(
+                rr,
+                duration,
+                low=1600.0 + 220.0 * i,
+                high=4200.0 + 320.0 * i,
+                drive=2.6,
+            )
+
+            tick_click = _ac_fm_impact(
+                rr,
+                duration,
+                3600.0 + 250.0 * i,
+                1800.0 + 150.0 * i,
+                mod_ratio=2.0,
+                index0=4.5,
+                drive=2.8,
+            )
+
+            tick = mix(
+                [
+                    (tick_noise, 0.70),
+                    (tick_click, 0.55),
+                ]
+            ) * _ac_delayed_decay(duration, delay, 0.006, attack_s=0.00015)
+
+            layers.append((tick, 1.0))
+
+        y = mix(layers)
+        y = highpass(y, 120.0)
+        y = lowpass(y, 8500.0)
+        y = _ac_softsat(y, 1.5)
+
+        return _ac_final(y)
+
+    def bell_return() -> np.ndarray:
+        r = child_rng(rng, 21)
+        duration = 0.105
+
+        bell = _ac_modal(
+            duration,
+            1760.0,
+            [1.0, 2.0, 2.7, 3.6],
+            [0.62, 0.36, 0.22, 0.13],
+            [
+                duration / 3.0,
+                duration / 4.2,
+                duration / 5.2,
+                duration / 6.2,
+            ],
+            rng=r,
+            detune=0.003,
+        )
+
+        strike_noise = _ac_noise_burst(
+            r,
+            duration,
+            low=2600.0,
+            high=7200.0,
+            drive=2.8,
+        ) * _ac_delayed_decay(duration, 0.0, 0.004, attack_s=0.00012)
+
+        strike_fm = _ac_fm_impact(
+            r,
+            duration,
+            4200.0,
+            2100.0,
+            mod_ratio=2.2,
+            index0=5.0,
+            drive=2.8,
+        ) * _ac_delayed_decay(duration, 0.0, 0.003, attack_s=0.00012)
+
+        body = _ac_cavity(
+            r,
+            duration,
+            [
+                (520.0, 160.0, 0.35),
+                (1050.0, 260.0, 0.25),
+            ],
+            drive=1.5,
+        )
+
+        body *= _ac_delayed_decay(
+            duration,
+            0.003,
+            max(0.012, duration / 4.0),
+            attack_s=0.0003,
+        )
+
+        body *= 0.35
+
+        y = mix(
+            [
+                (bell, 0.85),
+                (strike_noise, 0.55),
+                (strike_fm, 0.50),
+                (body, 1.0),
             ]
         )
 
         y = highpass(y, 180.0)
-        y = lowpass(y, 10500.0)
+        y = lowpass(y, 11500.0)
+        y = _ac_softsat(y, 1.55)
 
-        return finalize(y)
+        return _ac_final(y)
+
+    r_delete = child_rng(rng, 22)
+    delete = typebar_hit(
+        r_delete,
+        0.038,
+        base=1.20,
+        metal_gain=0.50,
+    )
+
+    shift = typebar_hit(
+        child_rng(rng, 23),
+        0.034,
+        base=1.35,
+        metal_gain=0.52,
+    )
+
+    symbol_a = typebar_hit(
+        child_rng(rng, 24),
+        0.034,
+        base=1.10,
+        metal_gain=0.46,
+    )
+
+    symbol_b = typebar_hit(
+        child_rng(rng, 25),
+        0.032,
+        base=1.28,
+        metal_gain=0.48,
+    )
+
+    symbol = _ac_final(concat([symbol_a, symbol_b], gap_s=0.011))
+
+    return {
+        "keypress.default": ev([default_variant(i) for i in range(3)], "random", 1.0),
+        "keypress.space": ev([space_ratchet()], "single", 1.0),
+        "keypress.delete": ev([delete], "single", 0.95),
+        "keypress.return": ev([bell_return()], "single", 0.95),
+        "keypress.shift": ev([shift], "single", 0.90),
+        "keypress.symbol": ev([symbol], "single", 0.90),
+    }
+
+
+# ----------------------------------------------------------------------------
+# 6. Creamy Linear — Jelly
+# ----------------------------------------------------------------------------
+
+def build_creamy_linear_jelly(rng: np.random.Generator) -> Dict[str, Dict]:
+    """
+    Soft, ultra-smooth dampened linear switch bottom-out.
+    """
+
+    def jelly(
+        r: np.random.Generator,
+        duration: float,
+        bottom: float,
+        cavity_a: float,
+        cavity_b: float,
+        click_gain: float = 0.12,
+        drive: float = 1.8,
+    ) -> np.ndarray:
+        return _ac_switch_hit(
+            r,
+            duration,
+            bottom=bottom,
+            cavity_bands=[
+                (cavity_a, 70.0, 0.70),
+                (cavity_b, 110.0, 0.45),
+            ],
+            click_low=160.0,
+            click_high=520.0,
+            click_gain=click_gain,
+            bottom_gain=0.95,
+            spring_freq=320.0,
+            spring_gain=0.0,
+            drive=drive,
+            lowpass_cutoff=650.0,
+            highpass_cutoff=24.0,
+        )
 
     def default_variant(i: int) -> np.ndarray:
         r = child_rng(rng, 10 + i)
 
-        base = float(r.uniform(210.0, 300.0))
-        duration = float(r.uniform(0.065, 0.085))
+        duration = float(r.uniform(0.065, 0.090))
+        bottom = float(r.uniform(75.0, 120.0))
+        cavity_a = float(r.uniform(160.0, 220.0))
+        cavity_b = float(r.uniform(280.0, 360.0))
+        click_gain = float(r.uniform(0.08, 0.14))
+        drive = float(r.uniform(1.6, 1.9))
+
+        return jelly(
+            r,
+            duration,
+            bottom,
+            cavity_a,
+            cavity_b,
+            click_gain=click_gain,
+            drive=drive,
+        )
+
+    r_space = child_rng(rng, 20)
+    space = jelly(
+        r_space,
+        0.105,
+        float(r_space.uniform(60.0, 75.0)),
+        140.0,
+        260.0,
+        click_gain=0.10,
+        drive=1.7,
+    )
+
+    r_delete = child_rng(rng, 21)
+    delete = jelly(
+        r_delete,
+        0.045,
+        150.0,
+        230.0,
+        380.0,
+        click_gain=0.16,
+        drive=1.8,
+    )
+
+    r_ret_a = child_rng(rng, 22)
+    r_ret_b = child_rng(rng, 23)
+
+    ret_a = jelly(
+        r_ret_a,
+        0.080,
+        85.0,
+        170.0,
+        290.0,
+        click_gain=0.11,
+        drive=1.7,
+    )
+
+    ret_b = jelly(
+        r_ret_b,
+        0.045,
+        120.0,
+        210.0,
+        340.0,
+        click_gain=0.13,
+        drive=1.8,
+    )
+
+    ret = _ac_final(add_delayed(ret_a, ret_b, 0.020, 0.72))
+
+    shift = jelly(
+        child_rng(rng, 24),
+        0.036,
+        190.0,
+        260.0,
+        420.0,
+        click_gain=0.16,
+        drive=1.9,
+    )
+
+    symbol_a = jelly(
+        child_rng(rng, 25),
+        0.035,
+        135.0,
+        210.0,
+        330.0,
+        click_gain=0.13,
+        drive=1.8,
+    )
+
+    symbol_b = jelly(
+        child_rng(rng, 26),
+        0.033,
+        165.0,
+        240.0,
+        370.0,
+        click_gain=0.14,
+        drive=1.8,
+    )
+
+    symbol = _ac_final(concat([symbol_a, symbol_b], gap_s=0.010))
+
+    return {
+        "keypress.default": ev([default_variant(i) for i in range(3)], "random", 1.0),
+        "keypress.space": ev([space], "single", 1.0),
+        "keypress.delete": ev([delete], "single", 0.95),
+        "keypress.return": ev([ret], "single", 0.95),
+        "keypress.shift": ev([shift], "single", 0.90),
+        "keypress.symbol": ev([symbol], "single", 0.90),
+    }
+
+
+# ----------------------------------------------------------------------------
+# 7. Woodblock — Teak
+# ----------------------------------------------------------------------------
+
+def build_teak_woodblock(rng: np.random.Generator) -> Dict[str, Dict]:
+    """
+    Acoustic wooden mallet resonance with dual wood-grain modes.
+    """
+
+    def wood_hit(
+        r: np.random.Generator,
+        duration: float,
+        base: float,
+        brightness: float = 1.0,
+        body_low: float = 320.0,
+        body_high: float = 720.0,
+    ) -> np.ndarray:
+        ratios = [1.0, 2.07, 2.92]
+        gains = [0.85, 0.45, 0.22]
+        taus = [
+            duration / 4.2,
+            duration / 5.5,
+            duration / 6.8,
+        ]
+
+        return _ac_modal_instrument(
+            r,
+            duration,
+            base,
+            ratios,
+            gains,
+            taus,
+            exciter_low=1800.0 * brightness,
+            exciter_high=5600.0 * brightness,
+            exciter_gain=0.55,
+            body_bands=[
+                (body_low, 110.0, 0.38),
+                (body_high, 190.0, 0.28),
+            ],
+            body_gain=0.42,
+            drive=2.4,
+            lowpass_cutoff=9500.0,
+            highpass_cutoff=120.0,
+        )
+
+    def default_variant(i: int) -> np.ndarray:
+        r = child_rng(rng, 10 + i)
+
+        duration = float(r.uniform(0.045, 0.062))
+        base = float(r.uniform(680.0, 780.0))
+        brightness = float(r.uniform(0.90, 1.10))
+
+        return wood_hit(r, duration, base, brightness=brightness)
+
+    r_space = child_rng(rng, 20)
+    space = wood_hit(
+        r_space,
+        0.100,
+        390.0,
+        brightness=0.85,
+        body_low=220.0,
+        body_high=420.0,
+    )
+
+    r_delete = child_rng(rng, 21)
+    delete = wood_hit(
+        r_delete,
+        0.036,
+        1300.0,
+        brightness=1.25,
+        body_low=420.0,
+        body_high=900.0,
+    )
+
+    r_ret_a = child_rng(rng, 22)
+    r_ret_b = child_rng(rng, 23)
+
+    ret_a = wood_hit(r_ret_a, 0.055, 720.0, brightness=1.0)
+    ret_b = wood_hit(r_ret_b, 0.050, 540.0, brightness=0.92)
+
+    ret = _ac_final(add_delayed(ret_a, ret_b, 0.018, 0.85))
+
+    shift = wood_hit(
+        child_rng(rng, 24),
+        0.034,
+        1700.0,
+        brightness=1.35,
+        body_low=500.0,
+        body_high=1050.0,
+    )
+
+    symbol_a = wood_hit(
+        child_rng(rng, 25),
+        0.035,
+        900.0,
+        brightness=1.05,
+        body_low=360.0,
+        body_high=780.0,
+    )
+
+    symbol_b = wood_hit(
+        child_rng(rng, 26),
+        0.032,
+        1180.0,
+        brightness=1.18,
+        body_low=420.0,
+        body_high=920.0,
+    )
+
+    symbol = _ac_final(concat([symbol_a, symbol_b], gap_s=0.010))
+
+    return {
+        "keypress.default": ev([default_variant(i) for i in range(3)], "random", 1.0),
+        "keypress.space": ev([space], "single", 1.0),
+        "keypress.delete": ev([delete], "single", 0.95),
+        "keypress.return": ev([ret], "single", 0.95),
+        "keypress.shift": ev([shift], "single", 0.90),
+        "keypress.symbol": ev([symbol], "single", 0.90),
+    }
+
+
+# ----------------------------------------------------------------------------
+# 8. Piano — Acoustic Grand
+# ----------------------------------------------------------------------------
+
+def build_grand_piano(rng: np.random.Generator) -> Dict[str, Dict]:
+    """
+    Short acoustic grand piano key: felt hammer, inharmonic strings, soundboard.
+    """
+
+    def default_variant(i: int) -> np.ndarray:
+        r = child_rng(rng, 10 + i)
+
+        freq = float(
+            r.choice(
+                [
+                    261.63,
+                    293.66,
+                    329.63,
+                    349.23,
+                    392.00,
+                ]
+            )
+        ) * float(r.uniform(0.995, 1.005))
+
+        duration = float(r.uniform(0.075, 0.095))
+        brightness = float(r.uniform(0.85, 1.05))
+
+        return _ac_piano_note(
+            r,
+            freq,
+            duration,
+            brightness=brightness,
+            hammer_gain=float(r.uniform(0.36, 0.46)),
+            body_gain=float(r.uniform(0.18, 0.26)),
+        )
+
+    space = _ac_piano_note(
+        child_rng(rng, 20),
+        98.0,
+        0.105,
+        brightness=0.80,
+        hammer_gain=0.30,
+        body_gain=0.28,
+    )
+
+    r_delete = child_rng(rng, 21)
+    delete = _ac_piano_note(
+        r_delete,
+        float(r_delete.uniform(820.0, 940.0)),
+        0.040,
+        brightness=1.15,
+        hammer_gain=0.50,
+        body_gain=0.10,
+    )
+
+    r_ret_a = child_rng(rng, 22)
+    r_ret_b = child_rng(rng, 23)
+
+    ret_a = _ac_piano_note(
+        r_ret_a,
+        392.0,
+        0.085,
+        brightness=0.95,
+        hammer_gain=0.40,
+        body_gain=0.18,
+    )
+
+    ret_b = _ac_piano_note(
+        r_ret_b,
+        587.33,
+        0.065,
+        brightness=1.00,
+        hammer_gain=0.38,
+        body_gain=0.15,
+    )
+
+    ret = _ac_final(add_delayed(ret_a, ret_b, 0.018, 0.88))
+
+    shift = _ac_piano_note(
+        child_rng(rng, 24),
+        1567.98,
+        0.035,
+        brightness=1.20,
+        hammer_gain=0.52,
+        body_gain=0.08,
+    )
+
+    symbol_a = _ac_piano_note(
+        child_rng(rng, 25),
+        987.77,
+        0.035,
+        brightness=1.05,
+        hammer_gain=0.44,
+        body_gain=0.10,
+    )
+
+    symbol_b = _ac_piano_note(
+        child_rng(rng, 26),
+        1174.66,
+        0.035,
+        brightness=1.05,
+        hammer_gain=0.44,
+        body_gain=0.10,
+    )
+
+    symbol = _ac_final(concat([symbol_a, symbol_b], gap_s=0.010))
+
+    return {
+        "keypress.default": ev([default_variant(i) for i in range(3)], "random", 1.0),
+        "keypress.space": ev([space], "single", 1.0),
+        "keypress.delete": ev([delete], "single", 0.95),
+        "keypress.return": ev([ret], "single", 0.95),
+        "keypress.shift": ev([shift], "single", 0.90),
+        "keypress.symbol": ev([symbol], "single", 0.90),
+    }
+
+
+# ----------------------------------------------------------------------------
+# 9. Acoustic Pluck — Nylon Guitar
+# ----------------------------------------------------------------------------
+
+def build_nylon_guitar(rng: np.random.Generator) -> Dict[str, Dict]:
+    """
+    Karplus-Strong nylon string with wooden guitar cavity resonance.
+    """
+
+    def default_variant(i: int) -> np.ndarray:
+        r = child_rng(rng, 10 + i)
+
+        freq = float(
+            r.choice(
+                [
+                    196.00,
+                    246.94,
+                    329.63,
+                ]
+            )
+        ) * float(r.uniform(0.996, 1.004))
+
+        duration = float(r.uniform(0.080, 0.100))
+        brightness = float(r.uniform(0.45, 0.62))
+
+        return _ac_guitar_note(
+            r,
+            freq,
+            duration,
+            brightness=brightness,
+            body_gain=float(r.uniform(0.30, 0.40)),
+            pick_gain=float(r.uniform(0.22, 0.30)),
+        )
+
+    space = _ac_guitar_note(
+        child_rng(rng, 20),
+        82.41,
+        0.105,
+        brightness=0.35,
+        body_gain=0.50,
+        pick_gain=0.16,
+    )
+
+    r_delete = child_rng(rng, 21)
+    delete = _ac_guitar_note(
+        r_delete,
+        float(r_delete.uniform(659.0, 784.0)),
+        0.042,
+        brightness=0.80,
+        body_gain=0.14,
+        pick_gain=0.35,
+    )
+
+    r_ret_a = child_rng(rng, 22)
+    r_ret_b = child_rng(rng, 23)
+
+    ret_a = _ac_guitar_note(
+        r_ret_a,
+        196.0,
+        0.070,
+        brightness=0.52,
+        body_gain=0.34,
+        pick_gain=0.24,
+    )
+
+    ret_b = _ac_guitar_note(
+        r_ret_b,
+        293.66,
+        0.055,
+        brightness=0.58,
+        body_gain=0.30,
+        pick_gain=0.24,
+    )
+
+    ret = _ac_final(add_delayed(ret_a, ret_b, 0.020, 0.88))
+
+    shift = _ac_guitar_note(
+        child_rng(rng, 24),
+        1174.66,
+        0.035,
+        brightness=0.85,
+        body_gain=0.12,
+        pick_gain=0.35,
+    )
+
+    symbol_a = _ac_guitar_note(
+        child_rng(rng, 25),
+        880.0,
+        0.035,
+        brightness=0.72,
+        body_gain=0.16,
+        pick_gain=0.30,
+    )
+
+    symbol_b = _ac_guitar_note(
+        child_rng(rng, 26),
+        987.77,
+        0.035,
+        brightness=0.72,
+        body_gain=0.16,
+        pick_gain=0.30,
+    )
+
+    symbol = _ac_final(concat([symbol_a, symbol_b], gap_s=0.008))
+
+    return {
+        "keypress.default": ev([default_variant(i) for i in range(3)], "random", 1.0),
+        "keypress.space": ev([space], "single", 1.0),
+        "keypress.delete": ev([delete], "single", 0.95),
+        "keypress.return": ev([ret], "single", 0.95),
+        "keypress.shift": ev([shift], "single", 0.90),
+        "keypress.symbol": ev([symbol], "single", 0.90),
+    }
+
+
+# ----------------------------------------------------------------------------
+# 10. Folk Drum — Kerala Chenda
+# ----------------------------------------------------------------------------
+
+def build_kerala_chenda(rng: np.random.Generator) -> Dict[str, Dict]:
+    """
+    Cane stick transient, parchment membrane modes, and wooden shell thud.
+    """
+
+    def chenda_hit(
+        r: np.random.Generator,
+        duration: float,
+        base: float,
+        stick_gain: float = 0.70,
+        body_gain: float = 0.50,
+    ) -> np.ndarray:
+        ratios = [1.0, 1.59, 2.14, 2.30]
+        gains = [0.80, 0.38, 0.26, 0.20]
+        taus = [
+            duration / 3.6,
+            duration / 4.6,
+            duration / 5.6,
+            duration / 6.2,
+        ]
+
+        return _ac_modal_instrument(
+            r,
+            duration,
+            base,
+            ratios,
+            gains,
+            taus,
+            exciter_low=2600.0,
+            exciter_high=6800.0,
+            exciter_gain=stick_gain,
+            body_bands=[
+                (max(45.0, base * 0.55), max(30.0, base * 0.35), 0.65),
+                (max(90.0, base * 1.30), max(50.0, base * 0.50), 0.35),
+            ],
+            body_gain=body_gain,
+            drive=2.6,
+            lowpass_cutoff=9500.0,
+            highpass_cutoff=70.0,
+        )
+
+    def rim_crack(
+        r: np.random.Generator,
+        duration: float,
+        freq: float = 4200.0,
+    ) -> np.ndarray:
+        crack = _ac_noise_burst(
+            r,
+            duration,
+            low=2500.0,
+            high=7500.0,
+            drive=2.8,
+        ) * _ac_delayed_decay(duration, 0.0, duration / 2.8, attack_s=0.00012)
+
+        click = _ac_fm_impact(
+            r,
+            duration,
+            freq * 1.2,
+            freq * 0.7,
+            mod_ratio=2.0,
+            index0=5.0,
+            drive=2.5,
+        ) * _ac_delayed_decay(duration, 0.0, 0.003, attack_s=0.00012)
+
+        body = _ac_cavity(
+            r,
+            duration,
+            [
+                (400.0, 150.0, 0.40),
+            ],
+            drive=1.5,
+        )
+
+        body *= _ac_delayed_decay(duration, 0.002, duration / 5.0, attack_s=0.0002)
+        body *= 0.30
+
+        y = mix(
+            [
+                (crack, 0.80),
+                (click, 0.65),
+                (body, 1.0),
+            ]
+        )
+
+        y = highpass(y, 200.0)
+        y = lowpass(y, 10500.0)
+        y = _ac_softsat(y, 1.55)
+
+        return _ac_final(y)
+
+    def default_variant(i: int) -> np.ndarray:
+        r = child_rng(rng, 10 + i)
+
+        duration = float(r.uniform(0.055, 0.078))
+        base = float(r.uniform(210.0, 280.0))
+        stick_gain = float(r.uniform(0.65, 0.80))
+        body_gain = float(r.uniform(0.42, 0.56))
 
         return chenda_hit(
             r,
-            base,
             duration,
-            stick_gain=float(r.uniform(0.50, 0.62)),
-            rim_gain=float(r.uniform(0.18, 0.30)),
-            body_gain=float(r.uniform(0.38, 0.50)),
-            deep_gain=float(r.uniform(0.28, 0.40)),
+            base,
+            stick_gain=stick_gain,
+            body_gain=body_gain,
         )
 
     r_space = child_rng(rng, 20)
     space = chenda_hit(
         r_space,
-        float(r_space.uniform(90.0, 110.0)),
-        0.130,
+        0.105,
+        float(r_space.uniform(95.0, 112.0)),
         stick_gain=0.35,
-        rim_gain=0.12,
-        body_gain=0.55,
-        deep_gain=0.55,
+        body_gain=0.65,
     )
 
     r_delete = child_rng(rng, 21)
     delete = rim_crack(
         r_delete,
-        0.035,
-        freq=float(r_delete.uniform(3800.0, 4600.0)),
+        0.036,
+        freq=float(r_delete.uniform(3900.0, 4700.0)),
     )
 
-    r_return_body = child_rng(rng, 22)
-    r_return_rim = child_rng(rng, 23)
+    r_ret_body = child_rng(rng, 22)
+    r_ret_rim = child_rng(rng, 23)
 
-    return_body = chenda_hit(
-        r_return_body,
-        160.0,
-        0.100,
-        stick_gain=0.42,
-        rim_gain=0.15,
-        body_gain=0.55,
-        deep_gain=0.48,
+    ret_body = chenda_hit(
+        r_ret_body,
+        0.085,
+        150.0,
+        stick_gain=0.48,
+        body_gain=0.60,
     )
 
-    return_rim = rim_crack(
-        r_return_rim,
+    ret_rim = rim_crack(
+        r_ret_rim,
         0.032,
         freq=4300.0,
     )
 
-    ret = add_delayed(return_body, return_rim, 0.022, 0.85)
-    ret = finalize(ret)
+    ret = _ac_final(add_delayed(ret_body, ret_rim, 0.022, 0.85))
 
     shift = rim_crack(
         child_rng(rng, 24),
         0.032,
-        freq=5000.0,
+        freq=4800.0,
     )
 
     symbol_a = chenda_hit(
         child_rng(rng, 25),
-        320.0,
         0.038,
-        stick_gain=0.60,
-        rim_gain=0.30,
-        body_gain=0.25,
-        deep_gain=0.18,
+        320.0,
+        stick_gain=0.68,
+        body_gain=0.32,
     )
 
     symbol_b = rim_crack(
         child_rng(rng, 26),
-        0.032,
-        freq=4800.0,
+        0.030,
+        freq=4600.0,
     )
 
-    symbol = finalize(concat([symbol_a, symbol_b], gap_s=0.012))
+    symbol = _ac_final(concat([symbol_a, symbol_b], gap_s=0.011))
 
     return {
         "keypress.default": ev([default_variant(i) for i in range(3)], "random", 1.0),
@@ -1995,89 +2864,102 @@ def build_kerala_chenda(rng: np.random.Generator) -> Dict[str, Dict]:
 
 
 # ----------------------------------------------------------------------------
-# 4. Carnatic Mridangam
+# 11. Resonant Drum — Carnatic Mridangam
 # ----------------------------------------------------------------------------
 
 def build_carnatic_mridangam(rng: np.random.Generator) -> Dict[str, Dict]:
     """
-    Crisp metallic harmonic ring with deep rounded pitch-bend bass resonance.
+    Metallic harmonic ring and downward pitch-bending bass resonance.
     """
 
     def mrid_hit(
         r: np.random.Generator,
-        base: float,
         duration: float,
-        ring_gain: float = 0.50,
-        bass_gain: float = 0.70,
+        base: float,
+        ring_gain: float = 0.55,
+        bass_gain: float = 0.65,
         bend: bool = False,
         slap_gain: float = 0.45,
     ) -> np.ndarray:
-        if bend:
-            bass = tone(duration, base * 1.25, base * 0.72, wave="sine", curve="exp")
-        else:
-            bass = tone(duration, base * 1.05, base * 0.88, wave="sine", curve="exp")
-
-        bass *= decay_env(duration, duration / 3.2)
-
-        ring_base = base * 2.1
-
-        ring = _modal_layers(
+        ring = _ac_modal(
             duration,
-            ring_base,
-            ratios=[1.0, 2.0, 3.0, 4.05, 5.1],
-            gains=[0.65, 0.40, 0.24, 0.14, 0.09],
-            taus=[
-                duration / 3.5,
-                duration / 4.2,
-                duration / 5.0,
-                duration / 6.0,
-                duration / 7.0,
+            base * 2.0,
+            [1.0, 2.0, 3.0, 4.05],
+            [0.62, 0.38, 0.22, 0.12],
+            [
+                duration / 3.8,
+                duration / 4.6,
+                duration / 5.6,
+                duration / 6.8,
             ],
             rng=r,
-            detune=0.004,
+            detune=0.003,
         )
 
-        slap = _transient_noise(
-            r,
-            0.006,
-            low=1200.0,
-            high=4200.0,
-            tau=0.0022,
-        )
+        if bend:
+            bass = tone(duration, base * 1.32, base * 0.70, wave="sine", curve="exp")
+        else:
+            bass = tone(duration, base * 1.06, base * 0.88, wave="sine", curve="exp")
 
-        body = _transient_noise(
+        bass *= decay_env(duration, max(0.006, duration / 3.2), attack_s=0.0002)
+        bass = _ac_softsat(bass, 1.9)
+
+        slap = _ac_noise_burst(
             r,
             duration,
-            low=150.0,
-            high=550.0,
-            tau=duration / 3.5,
+            low=1200.0,
+            high=4600.0,
+            drive=2.3,
         )
+
+        slap *= _ac_delayed_decay(duration, 0.0, 0.004, attack_s=0.00015)
+        slap *= float(slap_gain)
+
+        body = _ac_cavity(
+            r,
+            duration,
+            [
+                (max(60.0, base * 1.1), max(35.0, base * 0.5), 0.55),
+                (max(120.0, base * 2.3), max(60.0, base * 0.8), 0.35),
+            ],
+            drive=1.7,
+        )
+
+        body *= _ac_delayed_decay(
+            duration,
+            0.003,
+            max(0.012, duration / 3.6),
+            attack_s=0.0003,
+        )
+
+        body *= 0.45
 
         y = mix(
             [
-                (bass, bass_gain),
                 (ring, ring_gain),
-                (slap, slap_gain),
-                (body, 0.22),
+                (bass, bass_gain),
+                (slap, 1.0),
+                (body, 1.0),
             ]
         )
 
         y = highpass(y, 45.0)
-        y = lowpass(y, 8800.0)
+        y = lowpass(y, 8600.0)
+        y = _ac_softsat(y, 1.55)
 
-        return finalize(y)
+        return _ac_final(y)
 
     def default_variant(i: int) -> np.ndarray:
         r = child_rng(rng, 10 + i)
 
-        base = float(r.uniform(170.0, 240.0))
-        duration = float(r.uniform(0.080, 0.105))
+        duration = float(r.uniform(0.075, 0.095))
+        base = float(r.uniform(180.0, 240.0))
         bend = bool(r.random() < 0.35)
 
         return mrid_hit(
             r,
-            base,
             duration,
+            base,
             ring_gain=float(r.uniform(0.48, 0.60)),
             bass_gain=float(r.uniform(0.58, 0.72)),
             bend=bend,
@@ -2087,65 +2969,64 @@ def build_carnatic_mridangam(rng: np.random.Generator) -> Dict[str, Dict]:
     r_space = child_rng(rng, 20)
     space = mrid_hit(
         r_space,
+        0.105,
         float(r_space.uniform(75.0, 95.0)),
-        0.130,
         ring_gain=0.25,
-        bass_gain=0.85,
+        bass_gain=0.90,
         bend=True,
-        slap_gain=0.25,
+        slap_gain=0.22,
     )
 
     r_delete = child_rng(rng, 21)
     delete = mrid_hit(
         r_delete,
-        float(r_delete.uniform(650.0, 800.0)),
         0.040,
-        ring_gain=0.70,
-        bass_gain=0.15,
+        float(r_delete.uniform(650.0, 780.0)),
+        ring_gain=0.75,
+        bass_gain=0.12,
         bend=False,
         slap_gain=0.55,
     )
 
-    r_return_low = child_rng(rng, 22)
-    r_return_high = child_rng(rng, 23)
+    r_ret_low = child_rng(rng, 22)
+    r_ret_high = child_rng(rng, 23)
 
-    return_low = mrid_hit(
-        r_return_low,
+    ret_low = mrid_hit(
+        r_ret_low,
+        0.095,
         100.0,
-        0.100,
         ring_gain=0.22,
-        bass_gain=0.85,
+        bass_gain=0.88,
         bend=True,
-        slap_gain=0.22,
+        slap_gain=0.20,
     )
 
-    return_high = mrid_hit(
-        r_return_high,
+    ret_high = mrid_hit(
+        r_ret_high,
+        0.045,
         520.0,
-        0.060,
-        ring_gain=0.68,
-        bass_gain=0.20,
+        ring_gain=0.70,
+        bass_gain=0.18,
         bend=False,
         slap_gain=0.48,
     )
 
-    ret = add_delayed(return_low, return_high, 0.030, 0.85)
-    ret = finalize(ret)
+    ret = _ac_final(add_delayed(ret_low, ret_high, 0.035, 0.85))
 
     shift = mrid_hit(
         child_rng(rng, 24),
-        1200.0,
         0.035,
-        ring_gain=0.80,
+        1200.0,
+        ring_gain=0.82,
         bass_gain=0.10,
         bend=False,
-        slap_gain=0.50,
+        slap_gain=0.52,
     )
 
     symbol_a = mrid_hit(
         child_rng(rng, 25),
-        720.0,
         0.035,
+        720.0,
         ring_gain=0.72,
         bass_gain=0.12,
         bend=False,
@@ -2154,15 +3035,15 @@ def build_carnatic_mridangam(rng: np.random.Generator) -> Dict[str, Dict]:
 
     symbol_b = mrid_hit(
         child_rng(rng, 26),
+        0.040,
         140.0,
-        0.045,
         ring_gain=0.25,
-        bass_gain=0.75,
+        bass_gain=0.78,
         bend=True,
         slap_gain=0.25,
     )
 
-    symbol = finalize(concat([symbol_a, symbol_b], gap_s=0.010))
+    symbol = _ac_final(concat([symbol_a, symbol_b], gap_s=0.010))
 
     return {
         "keypress.default": ev([default_variant(i) for i in range(3)], "random", 1.0),
@@ -2175,68 +3056,48 @@ def build_carnatic_mridangam(rng: np.random.Generator) -> Dict[str, Dict]:
 
 
 # ----------------------------------------------------------------------------
-# 5. Kalimba Thumb Piano
+# 12. Kalimba — Thumb Piano
 # ----------------------------------------------------------------------------
 
 def build_kalimba_tines(rng: np.random.Generator) -> Dict[str, Dict]:
     """
-    Bell-like plucked steel tines with hollow gourd chamber resonance.
+    Plucked steel tines with cantilever modes and wooden soundbox resonance.
     """
 
     def kalimba_note(
         r: np.random.Generator,
         freq: float,
         duration: float,
-        chamber_gain: float = 0.30,
-        click_gain: float = 0.35,
+        body_gain: float = 0.35,
+        click_gain: float = 0.38,
     ) -> np.ndarray:
-        tine = _modal_layers(
+        ratios = [1.0, 2.76, 5.40]
+        gains = [1.0, 0.28, 0.12]
+        taus = [
+            duration / 3.0,
+            duration / 4.4,
+            duration / 5.8,
+        ]
+
+        return _ac_modal_instrument(
+            r,
             duration,
             freq,
-            ratios=[1.0, 2.31, 3.98, 5.42, 7.1],
-            gains=[1.0, 0.32, 0.20, 0.12, 0.07],
-            taus=[
-                duration / 3.0,
-                duration / 4.2,
-                duration / 5.2,
-                duration / 6.2,
-                duration / 7.2,
+            ratios,
+            gains,
+            taus,
+            exciter_low=2600.0,
+            exciter_high=7200.0,
+            exciter_gain=click_gain,
+            body_bands=[
+                (280.0, 90.0, 0.50),
+                (540.0, 160.0, 0.35),
             ],
-            rng=r,
-            detune=0.003,
+            body_gain=body_gain,
+            drive=2.0,
+            lowpass_cutoff=11500.0,
+            highpass_cutoff=120.0,
         )
-
-        click = _transient_noise(
-            r,
-            0.005,
-            high=3200.0,
-            tau=0.0017,
-        )
-
-        chamber = _transient_noise(
-            r,
-            duration,
-            low=250.0,
-            high=800.0,
-            tau=duration / 3.5,
-        )
-
-        sub = tone(duration, freq * 0.5, freq * 0.48, wave="sine", curve="exp")
-        sub *= decay_env(duration, duration / 4.5)
-
-        y = mix(
-            [
-                (tine, 0.85),
-                (click, click_gain),
-                (chamber, chamber_gain * 0.40),
-                (sub, chamber_gain * 0.35),
-            ]
-        )
-
-        y = lowpass(y, 11500.0)
-        y = highpass(y, 120.0)
-
-        return finalize(y)
 
     def default_variant(i: int) -> np.ndarray:
         r = child_rng(rng, 10 + i)
@@ -2244,87 +3105,86 @@ def build_kalimba_tines(rng: np.random.Generator) -> Dict[str, Dict]:
         freq = float(
             r.choice(
                 [
-                    523.25,  # C5
-                    587.33,  # D5
-                    659.25,  # E5
-                    783.99,  # G5
+                    523.25,
+                    587.33,
+                    659.25,
+                    783.99,
                 ]
             )
         ) * float(r.uniform(0.997, 1.003))
 
-        duration = float(r.uniform(0.080, 0.105))
+        duration = float(r.uniform(0.075, 0.095))
 
         return kalimba_note(
             r,
             freq,
             duration,
-            chamber_gain=float(r.uniform(0.24, 0.34)),
-            click_gain=float(r.uniform(0.30, 0.40)),
+            body_gain=float(r.uniform(0.28, 0.38)),
+            click_gain=float(r.uniform(0.32, 0.42)),
         )
 
     space = kalimba_note(
         child_rng(rng, 20),
         220.0,
-        0.130,
-        chamber_gain=0.45,
-        click_gain=0.25,
+        0.105,
+        body_gain=0.50,
+        click_gain=0.26,
     )
 
     delete = kalimba_note(
         child_rng(rng, 21),
         1567.98,
-        0.038,
-        chamber_gain=0.12,
-        click_gain=0.45,
+        0.036,
+        body_gain=0.14,
+        click_gain=0.48,
     )
 
-    r_return_a = child_rng(rng, 22)
-    r_return_b = child_rng(rng, 23)
+    r_ret_a = child_rng(rng, 22)
+    r_ret_b = child_rng(rng, 23)
 
-    return_root = kalimba_note(
-        r_return_a,
+    ret_a = kalimba_note(
+        r_ret_a,
         523.25,
-        0.100,
-        chamber_gain=0.32,
+        0.085,
+        body_gain=0.34,
+        click_gain=0.34,
+    )
+
+    ret_b = kalimba_note(
+        r_ret_b,
+        783.99,
+        0.060,
+        body_gain=0.30,
         click_gain=0.32,
     )
 
-    return_fifth = kalimba_note(
-        r_return_b,
-        783.99,
-        0.075,
-        chamber_gain=0.28,
-        click_gain=0.30,
-    )
-
-    ret = add_delayed(return_root, return_fifth, 0.020, 0.90)
-    ret = finalize(ret)
+    ret = _ac_final(add_delayed(ret_a, ret_b, 0.018, 0.88))
 
     shift = kalimba_note(
         child_rng(rng, 24),
         2093.0,
         0.032,
-        chamber_gain=0.10,
-        click_gain=0.45,
+        body_gain=0.12,
+        click_gain=0.48,
     )
 
     symbol_a = kalimba_note(
         child_rng(rng, 25),
         1046.5,
         0.034,
-        chamber_gain=0.18,
-        click_gain=0.38,
+        body_gain=0.20,
+        click_gain=0.40,
     )
 
     symbol_b = kalimba_note(
         child_rng(rng, 26),
         1174.66,
         0.034,
-        chamber_gain=0.18,
-        click_gain=0.38,
+        body_gain=0.20,
+        click_gain=0.40,
     )
 
-    symbol = finalize(concat([symbol_a, symbol_b], gap_s=0.009))
+    symbol = _ac_final(concat([symbol_a, symbol_b], gap_s=0.009))
 
     return {
         "keypress.default": ev([default_variant(i) for i in range(3)], "random", 1.0),
@@ -2337,65 +3197,32 @@ def build_kalimba_tines(rng: np.random.Generator) -> Dict[str, Dict]:
 
 
 # ----------------------------------------------------------------------------
-# 6. Orchestral Pizzicato
+# 13. Pizzicato — Orchestral Strings
 # ----------------------------------------------------------------------------
 
 def build_orchestral_pizzicato(rng: np.random.Generator) -> Dict[str, Dict]:
     """
-    Crisp finger-plucked string with fast attack and acoustic wood chamber decay.
+    Finger-plucked string with fast attack and acoustic chamber decay.
     """
 
-    def pizz_raw(
-        r: np.random.Generator,
-        freq: float,
-        duration: float,
-        brightness: float = 0.65,
-        chamber_gain: float = 0.30,
-    ) -> np.ndarray:
-        string = _ks_pluck(r, freq, duration, brightness=brightness)
-        string = lowpass(string, 7200.0)
-        string = highpass(string, 75.0)
+    def default_variant(i: int) -> np.ndarray:
+        r = child_rng(rng, 10 + i)
 
-        body = _transient_noise(
-            r,
-            duration,
-            low=250.0,
-            high=620.0,
-            tau=duration / 3.5,
-        )
+        freq = float(
+            r.choice(
+                [
+                    293.66,
+                    392.00,
+                    587.33,
+                ]
+            )
+        ) * float(r.uniform(0.996, 1.004))
 
-        finger = _transient_noise(
-            r,
-            0.005,
-            low=1200.0,
-            high=3800.0,
-            tau=0.002,
-        )
+        duration = float(r.uniform(0.070, 0.090))
+        brightness = float(r.uniform(0.60, 0.80))
+        chamber_gain = float(r.uniform(0.28, 0.38))
 
-        wood = _transient_noise(
-            r,
-            duration,
-            low=750.0,
-            tau=duration / 5.5,
-        )
-
-        return mix(
-            [
-                (string, 0.92),
-                (body, chamber_gain),
-                (finger, 0.30),
-                (wood, 0.16),
-            ]
-        )
-
-    def pizz_note(
-        r: np.random.Generator,
-        freq: float,
-        duration: float,
-        brightness: float = 0.65,
-        chamber_gain: float = 0.30,
-    ) -> np.ndarray:
-        y = pizz_raw(
+        return _ac_pizz_note(
             r,
             freq,
             duration,
@@ -2403,102 +3230,76 @@ def build_orchestral_pizzicato(rng: np.random.Generator) -> Dict[str, Dict]:
             chamber_gain=chamber_gain,
         )
 
-        return finalize(y)
-
-    def default_variant(i: int) -> np.ndarray:
-        r = child_rng(rng, 10 + i)
-
-        freq = float(
-            r.choice(
-                [
-                    293.66,   # D4
-                    392.00,   # G4
-                    587.33,   # D5
-                ]
-            )
-        ) * float(r.uniform(0.996, 1.004))
-
-        duration = float(r.uniform(0.070, 0.095))
-        brightness = float(r.uniform(0.60, 0.80))
-
-        return pizz_note(
-            r,
-            freq,
-            duration,
-            brightness=brightness,
-            chamber_gain=float(r.uniform(0.26, 0.36)),
-        )
-
-    space = pizz_note(
+    space = _ac_pizz_note(
         child_rng(rng, 20),
         98.0,
-        0.130,
+        0.105,
         brightness=0.45,
-        chamber_gain=0.45,
+        chamber_gain=0.50,
     )
 
     r_delete = child_rng(rng, 21)
-    delete = pizz_note(
+    delete = _ac_pizz_note(
         r_delete,
         float(r_delete.uniform(1318.0, 1568.0)),
-        0.038,
-        brightness=0.85,
-        chamber_gain=0.12,
+        0.036,
+        brightness=0.88,
+        chamber_gain=0.14,
     )
 
-    r_return_a = child_rng(rng, 22)
-    r_return_b = child_rng(rng, 23)
+    r_ret_a = child_rng(rng, 22)
+    r_ret_b = child_rng(rng, 23)
 
-    return_low_raw = pizz_raw(
-        r_return_a,
+    ret_a = _ac_pizz_note(
+        r_ret_a,
         392.0,
-        0.095,
+        0.085,
         brightness=0.70,
-        chamber_gain=0.32,
+        chamber_gain=0.34,
     )
 
-    return_high_raw = pizz_raw(
-        r_return_b,
+    ret_b = _ac_pizz_note(
+        r_ret_b,
         587.33,
-        0.095,
+        0.085,
         brightness=0.72,
-        chamber_gain=0.28,
+        chamber_gain=0.30,
     )
 
     ret = mix(
         [
-            (return_low_raw, 0.80),
-            (return_high_raw, 0.70),
+            (ret_a, 0.80),
+            (ret_b, 0.72),
         ]
     )
 
-    ret = finalize(ret)
+    ret = _ac_final(ret)
 
-    shift = pizz_note(
+    shift = _ac_pizz_note(
         child_rng(rng, 24),
         2093.0,
         0.032,
-        brightness=0.90,
-        chamber_gain=0.10,
+        brightness=0.92,
+        chamber_gain=0.12,
     )
 
-    symbol_a = pizz_note(
+    symbol_a = _ac_pizz_note(
         child_rng(rng, 25),
         987.77,
         0.034,
         brightness=0.80,
-        chamber_gain=0.16,
+        chamber_gain=0.18,
     )
 
-    symbol_b = pizz_note(
+    symbol_b = _ac_pizz_note(
         child_rng(rng, 26),
         1318.51,
         0.034,
         brightness=0.80,
-        chamber_gain=0.16,
+        chamber_gain=0.18,
     )
 
-    symbol = finalize(concat([symbol_a, symbol_b], gap_s=0.009))
+    symbol = _ac_final(concat([symbol_a, symbol_b], gap_s=0.009))
 
     return {
         "keypress.default": ev([default_variant(i) for i in range(3)], "random", 1.0),
@@ -2511,8 +3312,15 @@ def build_orchestral_pizzicato(rng: np.random.Generator) -> Dict[str, Dict]:
 
 
 # ----------------------------------------------------------------------------
-# Register the instrument packs
-# ----------------------------------------------------------------------------
+
+@dataclass
+class PackSpec:
+    slug: str
+    name: str
+    summary: str
+    tags: List[str]
+    builder: Callable[[np.random.Generator], Dict[str, Dict]]
+    master_volume: float = 0.85
 
 
 PACKS: List[PackSpec] = [
@@ -2645,7 +3453,6 @@ PACKS: List[PackSpec] = [
         master_volume=0.85,
     ),
 ]
-
 
 # ----------------------------------------------------------------------------
 # Audio output and packaging
@@ -2924,3 +3731,4 @@ def main() -> int:
 
 if __name__ == "__main__":
     sys.exit(main())
+

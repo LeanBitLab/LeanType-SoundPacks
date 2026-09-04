@@ -19,8 +19,8 @@
         "deep"
       ],
       "file": "thock.zip",
-      "sha256": "4a84a648bf20ecee19ae5673093a9dccf4bb306363d8de4fb169bd96f5d65c5f",
-      "sizeBytes": 27916,
+      "sha256": "9e6df35fcd63dc354c32e76ef7e03862547134fa04f522c177ba4bc5653daabd",
+      "sizeBytes": 29856,
       "downloadUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/thock.zip",
       "previewUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/previews/thock_preview.ogg"
     },
@@ -42,8 +42,8 @@
         "bright"
       ],
       "file": "clicky.zip",
-      "sha256": "286c73048e3df7d8b90af9b644aa4f014a1fa3cfbc908d7511e49a3c52173bce",
-      "sizeBytes": 29851,
+      "sha256": "031f53f25cdd307ce8adaaaba7862e37441e42fbfdbdd9c7b2c3e159a81b9d9b",
+      "sizeBytes": 30437,
       "downloadUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/clicky.zip",
       "previewUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/previews/clicky_preview.ogg"
     },
@@ -64,8 +64,8 @@
         "snappy"
       ],
       "file": "tactile.zip",
-      "sha256": "ab528e419a7b920cfe2c8b71af8ef1816d684beb51567b7ba4a02699480076f1",
-      "sizeBytes": 29665,
+      "sha256": "c4ab0d3c916424ee441096e2128e9da61f5bdc1aa8f122f3d445f5b976d40f90",
+      "sizeBytes": 30394,
       "downloadUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/tactile.zip",
       "previewUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/previews/tactile_preview.ogg"
     },
@@ -87,8 +87,8 @@
         "click"
       ],
       "file": "mechanical.zip",
-      "sha256": "f0e907a1ea8d20b44f8f898ae2ec83d285eaec759fe035fa60412fa7a24f0966",
-      "sizeBytes": 33198,
+      "sha256": "f1a6d7c31c99535e29a99f4c030a250ce04a980b1260a82cc116d2daa7a7bbed",
+      "sizeBytes": 31909,
       "downloadUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/mechanical.zip",
       "previewUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/previews/mechanical_preview.ogg"
     },
@@ -110,8 +110,8 @@
         "chime"
       ],
       "file": "typewriter.zip",
-      "sha256": "9455db477f96dbf96e1651ce6a039d9fe6eee923eaa20d33ab9d58cdec872cd2",
-      "sizeBytes": 30753,
+      "sha256": "318ffbd15a92c6fe382213a155a2a0388c5e850af4f985a01a20835d986e367a",
+      "sizeBytes": 30870,
       "downloadUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/typewriter.zip",
       "previewUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/previews/typewriter_preview.ogg"
     },
@@ -133,8 +133,8 @@
         "soft"
       ],
       "file": "creamy.zip",
-      "sha256": "bceb2b9301e34eae950a1f848bc0687c607cff1bccefc585855386f85b733f17",
-      "sizeBytes": 27118,
+      "sha256": "927cb5e57a825919bc567260744d2338ed4f4a5d5075603e150f115da6e6b440",
+      "sizeBytes": 27676,
       "downloadUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/creamy.zip",
       "previewUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/previews/creamy_preview.ogg"
     },
@@ -156,8 +156,8 @@
         "8-bit"
       ],
       "file": "chiptune.zip",
-      "sha256": "087446d6bd05ad08445a148caf78e02134e9ac579f1a4065b452cbb9adf18540",
-      "sizeBytes": 31547,
+      "sha256": "fb1ead579a977ea914473f2ef5b546b6e5e7f33116bcfb6ded941fe3567ffd17",
+      "sizeBytes": 31549,
       "downloadUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/chiptune.zip",
       "previewUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/previews/chiptune_preview.ogg"
     },
@@ -179,8 +179,8 @@
         "clean"
       ],
       "file": "glass.zip",
-      "sha256": "32b455d6ef47dc4cdba1dacc398ca826db2fd978cbdd958cb47aafc64f86e655",
-      "sizeBytes": 29952,
+      "sha256": "0c5a36652ecaf559b0eb087af02c85b6b97016cbbcee96a9e87a11f12fbe736c",
+      "sizeBytes": 28859,
       "downloadUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/glass.zip",
       "previewUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/previews/glass_preview.ogg"
     },
@@ -202,8 +202,8 @@
         "soft"
       ],
       "file": "bubble.zip",
-      "sha256": "f1d39a7c8d249adad142e1286846f92c20ef05630fffea4efa4a86c67f4bac48",
-      "sizeBytes": 28364,
+      "sha256": "6ac160f38c4afe843105cac6c663b6c390a0d7151bd3ccce1d521b25fa9eb878",
+      "sizeBytes": 28296,
       "downloadUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/bubble.zip",
       "previewUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/previews/bubble_preview.ogg"
     },
@@ -225,8 +225,8 @@
         "acoustic"
       ],
       "file": "woodblock.zip",
-      "sha256": "d8fdef0aa781cbdfaa44ff5db0569469128750e74687b12fc4e79c1c6c8e4560",
-      "sizeBytes": 29294,
+      "sha256": "010f7fc72135e3a70224264f9a0b5ab72767d1fbe1de3a9083a85f3c63736370",
+      "sizeBytes": 30088,
       "downloadUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/woodblock.zip",
       "previewUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/previews/woodblock_preview.ogg"
     },
@@ -248,8 +248,8 @@
         "keys"
       ],
       "file": "piano.zip",
-      "sha256": "f37f981207aab9d8341ea236f8548e5c214b64cfd5fb31781dd8151b57f49773",
-      "sizeBytes": 30395,
+      "sha256": "41ea1662ffccbb517302c502f69e8c7ef228010e3fb58a9f6c96c62648519270",
+      "sizeBytes": 30014,
       "downloadUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/piano.zip",
       "previewUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/previews/piano_preview.ogg"
     },
@@ -271,8 +271,8 @@
         "pluck"
       ],
       "file": "acoustic-pluck.zip",
-      "sha256": "6ffbee7285bd0a130316adcd84c7a3f52fbdd6f4bb378b3cf45bf2cc70de24ea",
-      "sizeBytes": 31592,
+      "sha256": "b88842faf10bc33fb6d493f806cbdbc2698999aa615201d51f166d10f46209fc",
+      "sizeBytes": 31686,
       "downloadUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/acoustic-pluck.zip",
       "previewUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/previews/acoustic-pluck_preview.ogg"
     },
@@ -294,8 +294,8 @@
         "drum"
       ],
       "file": "folk-drum.zip",
-      "sha256": "bc3d785cd8ec4d1a62d773a3f95c35f63821a5702ea0cb1ee25289a1f62526bf",
-      "sizeBytes": 30264,
+      "sha256": "5f82bd5879742c35a60bd11c93e2270359d62826e37496855728e59c9f33849f",
+      "sizeBytes": 29959,
       "downloadUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/folk-drum.zip",
       "previewUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/previews/folk-drum_preview.ogg"
     },
@@ -317,8 +317,8 @@
         "drum"
       ],
       "file": "resonant-drum.zip",
-      "sha256": "61a21b580c802f4015d55799065a276de91ba951776dd89c1d450b7fd149a7b4",
-      "sizeBytes": 30343,
+      "sha256": "4bd5ba5ee88ecb38b925712f0f42142c75f995ebdb5300c3f21f52124f60ebd0",
+      "sizeBytes": 29543,
       "downloadUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/resonant-drum.zip",
       "previewUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/previews/resonant-drum_preview.ogg"
     },
@@ -340,8 +340,8 @@
         "tines"
       ],
       "file": "kalimba.zip",
-      "sha256": "e3bfdd413ac6bfc03971acc85f2148b6d474611c077f0bdf5ef759b665439916",
-      "sizeBytes": 30201,
+      "sha256": "a8e755ada8cc887591f46632ca15b26a258f52ef85ccf647565f3651e3ab2a96",
+      "sizeBytes": 30265,
       "downloadUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/kalimba.zip",
       "previewUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/previews/kalimba_preview.ogg"
     },
@@ -363,8 +363,8 @@
         "acoustic"
       ],
       "file": "pizzicato.zip",
-      "sha256": "cae1c3757ddf3c0e238ab70826523e1531f8a260a970b427d7e1f9c569fe75df",
-      "sizeBytes": 31160,
+      "sha256": "ed5658043f0fb8314c0acf62852879f382d51f9df976f4702c549308f7f2a173",
+      "sizeBytes": 30498,
       "downloadUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/pizzicato.zip",
       "previewUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/previews/pizzicato_preview.ogg"
     }
