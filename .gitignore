@@ -5,6 +5,17 @@ Thumbs.db
 *.wav
 *.tmp
 
+# IDE / Editor
+.idea/
+.vscode/
+*.iml
+
+# Agents & Antigravity
+.agents/
+.antigravity/
+.antigravityignore
+
 # Allow dist for sound pack zips
 !dist/
 !dist/**
+
