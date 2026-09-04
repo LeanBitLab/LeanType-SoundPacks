@@ -18,6 +18,12 @@ Official sound packs repository and creator guide for [LeanType Keyboard](https:
 | **Minimalistic Ceramic / Glass Marble** | `dev.leantype.sounds.minimalistic-ceramic-glass-marble` | Smooth polished mineral tap with glassy overtones |
 | **Water Bubble Pop** | `dev.leantype.sounds.water-bubble-pop` | Resonant liquid droplet burst with soft pop |
 | **Acoustic Teak Woodblock** | `dev.leantype.sounds.acoustic-teak-woodblock` | Natural acoustic percussion mallet tap |
+| **Acoustic Grand Piano** | `dev.leantype.sounds.grand-piano` | Felt hammer strike with warm steel string resonance |
+| **Nylon Acoustic Guitar** | `dev.leantype.sounds.nylon-guitar` | Warm physical-model plucked string with wooden body resonance |
+| **Kerala Chenda Percussion** | `dev.leantype.sounds.kerala-chenda` | Sharp cane stick strike, rim crack, and deep resonant drum body |
+| **Carnatic Mridangam** | `dev.leantype.sounds.carnatic-mridangam` | Crisp harmonic ring with deep pitch-bending bass resonance |
+| **Kalimba Thumb Piano** | `dev.leantype.sounds.kalimba-tines` | Bell-like steel tines with hollow gourd chamber resonance |
+| **Orchestral Pizzicato** | `dev.leantype.sounds.orchestral-pizzicato` | Fast finger-plucked string with acoustic chamber decay |
 
 ---
 
