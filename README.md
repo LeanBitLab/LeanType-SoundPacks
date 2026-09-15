@@ -24,6 +24,12 @@ Official sound packs repository and creator guide for [LeanType Keyboard](https:
 | **Resonant Drum** | `dev.leantype.sounds.resonant-drum` | Deep pitch-bending drum tap |
 | **Kalimba** | `dev.leantype.sounds.kalimba` | Plucked metal tines |
 | **Pizzicato** | `dev.leantype.sounds.pizzicato` | Short finger-plucked string |
+| **Soft Pudding (Synth)** | `dev.leantype.sounds.soft-pudding-synth` | Procedurally recreated soft dampened tap from v4.1.8 |
+| **Muted Marshmallow** | `dev.leantype.sounds.muted-marshmallow` | Ultra-dead, heavy sub-bass thud. Extremely soft |
+| **Felted Thock** | `dev.leantype.sounds.felted-thock` | Classic dampened enthusiast keyboard sound |
+| **Membrane Squish** | `dev.leantype.sounds.membrane-squish` | Retro rubber dome office keyboard feel |
+| **Cork Tap** | `dev.leantype.sounds.cork-tap` | Earthy, dry tap on soft wood or cork |
+| **Velvet Whisper** | `dev.leantype.sounds.velvet-whisper` | Airy, ASMR-style quiet tap with smooth release |
 
 ---
 
@@ -200,6 +206,16 @@ python tools/generate_all_soundpacks.py --base-url https://raw.githubusercontent
 - **Attack**: Zero leading silence at the start of the audio file for instant trigger response.
 - **Normalization**: Peak normalized around -3 dB to -1 dB.
 - **File Size**: Under 500 KB per audio variant, under 2 MB total pack size.
+
+---
+
+## 🌐 Other Sound Repositories & Community Discussion
+
+Looking for more custom sound packs, musical instruments, mechanical keyboard switch recordings, or community audio collections? Check out the active discussions and shared sound resources:
+
+- 💬 [**LeanType Sound Repositories & Music Collections (Discussion #370)**](https://github.com/LeanBitLab/LeanType/discussions/370) — Explore community sound packs, instrument samples, and audio sources.
+
+Feel free to share your own custom packs or recommend audio repositories in that discussion!
 
 ---
 
