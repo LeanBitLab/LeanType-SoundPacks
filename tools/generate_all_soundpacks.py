@@ -3313,6 +3313,120 @@ def build_orchestral_pizzicato(rng: np.random.Generator) -> Dict[str, Dict]:
 
 # ----------------------------------------------------------------------------
 
+
+# ==========================================
+# 0. Soft Pudding Synth (Restored Procedural)
+# ==========================================
+def build_soft_pudding_synth(rng: np.random.Generator) -> Dict[str, Dict]:
+    """
+    Algorithmically recreates the 'soft pudding' sound using DSP primitives.
+    Characterized by a short, low-frequency, heavily dampened tap.
+    """
+    def hit(freq: float, duration: float) -> np.ndarray:
+        body = tone(duration, freq, freq * 0.6, wave="sine") * decay_env(duration, tau=0.01)
+        click = lowpass(noise(rng, 0.003), 1000.0) * decay_env(0.003, tau=0.001)
+        return finalize(mix([(body, 0.75), (click, 0.25)]), target_db=-3.0)
+
+    return {
+        "keypress.default": ev([hit(220.0, 0.04), hit(235.0, 0.04)], "random"),
+        "keypress.space": ev([hit(120.0, 0.06)], "single"),
+        "keypress.delete": ev([hit(320.0, 0.03)], "single"),
+        "keypress.return": ev([hit(180.0, 0.05)], "single"),
+    }
+
+
+# ==========================================
+# 1. Muted Marshmallow (Ultra-Dead Sub Thud)
+# ==========================================
+def build_muted_marshmallow(rng: np.random.Generator) -> Dict[str, Dict]:
+    """Extremely short, heavy, and dead. Almost zero click, just a soft sub-bass thud."""
+    def hit(freq: float, duration: float) -> np.ndarray:
+        body = tone(duration, freq, freq * 0.5, wave="sine") * decay_env(duration, tau=0.006)
+        click = lowpass(noise(rng, 0.002), 600.0) * decay_env(0.002, tau=0.001)
+        return finalize(mix([(body, 0.95), (click, 0.05)]), target_db=-4.0)
+
+    return {
+        "keypress.default": ev([hit(130.0, 0.03), hit(140.0, 0.03)], "random"),
+        "keypress.space": ev([hit(80.0, 0.04)], "single"),
+        "keypress.delete": ev([hit(180.0, 0.025)], "single"),
+        "keypress.return": ev([hit(110.0, 0.035)], "single"),
+    }
+
+
+# ==========================================
+# 2. Felted Thock (Enthusiast Dampened)
+# ==========================================
+def build_felted_thock(rng: np.random.Generator) -> Dict[str, Dict]:
+    """Like a high-end mechanical keyboard heavily dampened with thick silicone/felt."""
+    def hit(freq: float, duration: float) -> np.ndarray:
+        body = tone(duration, freq, freq * 0.8, wave="triangle") * decay_env(duration, tau=0.012)
+        click = lowpass(noise(rng, 0.003), 1200.0) * decay_env(0.003, tau=0.002)
+        return finalize(mix([(body, 0.85), (click, 0.15)]), target_db=-3.0)
+
+    return {
+        "keypress.default": ev([hit(260.0, 0.04), hit(275.0, 0.04)], "random"),
+        "keypress.space": ev([hit(160.0, 0.05)], "single"),
+        "keypress.delete": ev([hit(320.0, 0.03)], "single"),
+        "keypress.return": ev([hit(200.0, 0.045)], "single"),
+    }
+
+
+# ==========================================
+# 3. Membrane Squish (Retro Office Soft)
+# ==========================================
+def build_membrane_squish(rng: np.random.Generator) -> Dict[str, Dict]:
+    """Vintage 90s rubber dome keyboard. Soft bottom-out with a tiny high-end tick."""
+    def hit(freq: float, duration: float) -> np.ndarray:
+        body = tone(duration, freq, freq * 0.9, wave="sine") * decay_env(duration, tau=0.015)
+        squish = bandpass(noise(rng, 0.004), 800.0, 1500.0) * decay_env(0.004, tau=0.003)
+        tick = highpass(noise(rng, 0.001), 4000.0) * decay_env(0.001, tau=0.001)
+        return finalize(mix([(body, 0.7), (squish, 0.25), (tick, 0.05)]), target_db=-2.5)
+
+    return {
+        "keypress.default": ev([hit(350.0, 0.04), hit(370.0, 0.04)], "random"),
+        "keypress.space": ev([hit(220.0, 0.05)], "single"),
+        "keypress.delete": ev([hit(450.0, 0.03)], "single"),
+        "keypress.return": ev([hit(280.0, 0.045)], "single"),
+    }
+
+
+# ==========================================
+# 4. Cork Tap (Organic Muted Wood)
+# ==========================================
+def build_cork_tap(rng: np.random.Generator) -> Dict[str, Dict]:
+    """Sounds like tapping on a thick piece of cork or soft wood. Earthy and dry."""
+    def hit(freq: float, duration: float) -> np.ndarray:
+        body = tone(duration, freq, freq * 0.7, wave="triangle") * decay_env(duration, tau=0.01)
+        texture = bandpass(noise(rng, 0.005), 400.0, 2500.0) * decay_env(0.005, tau=0.002)
+        return finalize(mix([(body, 0.6), (texture, 0.4)]), target_db=-3.5)
+
+    return {
+        "keypress.default": ev([hit(210.0, 0.035), hit(225.0, 0.035)], "random"),
+        "keypress.space": ev([hit(140.0, 0.045)], "single"),
+        "keypress.delete": ev([hit(300.0, 0.025)], "single"),
+        "keypress.return": ev([hit(180.0, 0.04)], "single"),
+    }
+
+
+# ==========================================
+# 5. Velvet Whisper (ASMR Airy Soft)
+# ==========================================
+def build_velvet_whisper(rng: np.random.Generator) -> Dict[str, Dict]:
+    """Very smooth, high-end but low-volume. A soft, airy release with a quiet body."""
+    def hit(freq: float, duration: float) -> np.ndarray:
+        body = tone(duration, freq, freq * 0.95, wave="sine") * decay_env(duration, tau=0.02)
+        air = highpass(noise(rng, 0.008), 2500.0) * decay_env(0.008, tau=0.005)
+        return finalize(mix([(body, 0.5), (air, 0.5)]), target_db=-5.0)
+
+    return {
+        "keypress.default": ev([hit(400.0, 0.04), hit(420.0, 0.04)], "random"),
+        "keypress.space": ev([hit(280.0, 0.05)], "single"),
+        "keypress.delete": ev([hit(500.0, 0.03)], "single"),
+        "keypress.return": ev([hit(340.0, 0.045)], "single"),
+    }
+
+# ----------------------------------------------------------------------------
+
 @dataclass
 class PackSpec:
     slug: str
@@ -3450,6 +3564,54 @@ PACKS: List[PackSpec] = [
         summary="Short finger-plucked string.",
         tags=["strings", "pizzicato", "acoustic"],
         builder=build_orchestral_pizzicato,
+        master_volume=0.85,
+    ),
+    PackSpec(
+        slug="soft-pudding-synth",
+        name="Soft Pudding (Synth)",
+        summary="Procedurally recreated soft dampened tap from v4.1.8.",
+        tags=["custom", "procedural", "restored", "soft"],
+        builder=build_soft_pudding_synth,
+        master_volume=0.85,
+    ),
+    PackSpec(
+        slug="muted-marshmallow",
+        name="Muted Marshmallow",
+        summary="Ultra-dead, heavy sub-bass thud. Extremely soft.",
+        tags=["soft", "custom", "procedural", "thud"],
+        builder=build_muted_marshmallow,
+        master_volume=0.85,
+    ),
+    PackSpec(
+        slug="felted-thock",
+        name="Felted Thock",
+        summary="Classic dampened enthusiast keyboard sound.",
+        tags=["soft", "custom", "procedural", "thock"],
+        builder=build_felted_thock,
+        master_volume=0.85,
+    ),
+    PackSpec(
+        slug="membrane-squish",
+        name="Membrane Squish",
+        summary="Retro rubber dome office keyboard feel.",
+        tags=["soft", "custom", "procedural", "retro"],
+        builder=build_membrane_squish,
+        master_volume=0.85,
+    ),
+    PackSpec(
+        slug="cork-tap",
+        name="Cork Tap",
+        summary="Earthy, dry tap on soft wood or cork.",
+        tags=["soft", "custom", "procedural", "organic"],
+        builder=build_cork_tap,
+        master_volume=0.85,
+    ),
+    PackSpec(
+        slug="velvet-whisper",
+        name="Velvet Whisper",
+        summary="Airy, ASMR-style quiet tap with smooth release.",
+        tags=["soft", "custom", "procedural", "asmr"],
+        builder=build_velvet_whisper,
         master_volume=0.85,
     ),
 ]
@@ -3709,6 +3871,11 @@ def main() -> int:
 
         index_packs.append(entry)
 
+        packs_dir = Path("packs") / spec.slug
+        if packs_dir.exists():
+            shutil.rmtree(packs_dir)
+        shutil.copytree(pack_dir, packs_dir)
+
         print(f"  -> {zip_path} ({zip_size} bytes)")
 
     index = {
@@ -3725,7 +3892,8 @@ def main() -> int:
     if not args.keep_build:
         shutil.rmtree(build_root)
 
-    print(f"Done. Index written to: {index_path}")
+    shutil.copy2(index_path, Path("index.json"))
+    print(f"Done. Index written to: {index_path} and root index.json")
     return 0
 
 

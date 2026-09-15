@@ -19,7 +19,7 @@
         "deep"
       ],
       "file": "thock.zip",
-      "sha256": "9e6df35fcd63dc354c32e76ef7e03862547134fa04f522c177ba4bc5653daabd",
+      "sha256": "e6a2bcc0c72a1613df68931f247bd20b24f0b30619f8c152ab4f2cb14be8f401",
       "sizeBytes": 29856,
       "downloadUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/thock.zip",
       "previewUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/previews/thock_preview.ogg"
@@ -42,8 +42,8 @@
         "bright"
       ],
       "file": "clicky.zip",
-      "sha256": "031f53f25cdd307ce8adaaaba7862e37441e42fbfdbdd9c7b2c3e159a81b9d9b",
-      "sizeBytes": 30437,
+      "sha256": "7a6f0ceb73f27b29f38775eedae4f03994b7989c8519b6af1c2c77281292bfd0",
+      "sizeBytes": 30436,
       "downloadUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/clicky.zip",
       "previewUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/previews/clicky_preview.ogg"
     },
@@ -64,8 +64,8 @@
         "snappy"
       ],
       "file": "tactile.zip",
-      "sha256": "c4ab0d3c916424ee441096e2128e9da61f5bdc1aa8f122f3d445f5b976d40f90",
-      "sizeBytes": 30394,
+      "sha256": "bb1377e6e82693570ea22bf36d3c5f02d8f86f652ee6afdb7e9804f21991a375",
+      "sizeBytes": 30398,
       "downloadUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/tactile.zip",
       "previewUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/previews/tactile_preview.ogg"
     },
@@ -87,8 +87,8 @@
         "click"
       ],
       "file": "mechanical.zip",
-      "sha256": "f1a6d7c31c99535e29a99f4c030a250ce04a980b1260a82cc116d2daa7a7bbed",
-      "sizeBytes": 31909,
+      "sha256": "704cda4dcf11571ba016a5e3780bfa98631b4bd728e4bdf2ad18a5e6551ef19d",
+      "sizeBytes": 31899,
       "downloadUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/mechanical.zip",
       "previewUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/previews/mechanical_preview.ogg"
     },
@@ -110,8 +110,8 @@
         "chime"
       ],
       "file": "typewriter.zip",
-      "sha256": "318ffbd15a92c6fe382213a155a2a0388c5e850af4f985a01a20835d986e367a",
-      "sizeBytes": 30870,
+      "sha256": "77a09eaf35744d4f4a42d0d060c58039c55385ee39c910e9fa9372c22de6e2eb",
+      "sizeBytes": 30874,
       "downloadUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/typewriter.zip",
       "previewUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/previews/typewriter_preview.ogg"
     },
@@ -133,8 +133,8 @@
         "soft"
       ],
       "file": "creamy.zip",
-      "sha256": "927cb5e57a825919bc567260744d2338ed4f4a5d5075603e150f115da6e6b440",
-      "sizeBytes": 27676,
+      "sha256": "e592cc2a911c27fbf2af2e376530bcb59568a4a6f51287d67afaba4cf19dc710",
+      "sizeBytes": 27671,
       "downloadUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/creamy.zip",
       "previewUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/previews/creamy_preview.ogg"
     },
@@ -156,8 +156,8 @@
         "8-bit"
       ],
       "file": "chiptune.zip",
-      "sha256": "fb1ead579a977ea914473f2ef5b546b6e5e7f33116bcfb6ded941fe3567ffd17",
-      "sizeBytes": 31549,
+      "sha256": "b36b8927c207322fb6a0fbddd3374bb69e82052b44b7423a20ca3a420aeaa226",
+      "sizeBytes": 31551,
       "downloadUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/chiptune.zip",
       "previewUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/previews/chiptune_preview.ogg"
     },
@@ -179,8 +179,8 @@
         "clean"
       ],
       "file": "glass.zip",
-      "sha256": "0c5a36652ecaf559b0eb087af02c85b6b97016cbbcee96a9e87a11f12fbe736c",
-      "sizeBytes": 28859,
+      "sha256": "3f0b113d8835dd5f18890a42e2de0cc980735cb5ff8746848f282ec4db9d6f85",
+      "sizeBytes": 28867,
       "downloadUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/glass.zip",
       "previewUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/previews/glass_preview.ogg"
     },
@@ -202,7 +202,7 @@
         "soft"
       ],
       "file": "bubble.zip",
-      "sha256": "6ac160f38c4afe843105cac6c663b6c390a0d7151bd3ccce1d521b25fa9eb878",
+      "sha256": "60f38d37a1a2d58901179c95633e3dd623a949eab314b7ee898b8205592736aa",
       "sizeBytes": 28296,
       "downloadUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/bubble.zip",
       "previewUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/previews/bubble_preview.ogg"
@@ -225,8 +225,8 @@
         "acoustic"
       ],
       "file": "woodblock.zip",
-      "sha256": "010f7fc72135e3a70224264f9a0b5ab72767d1fbe1de3a9083a85f3c63736370",
-      "sizeBytes": 30088,
+      "sha256": "d2e52e2e32cba8c982212fe439f5536e7f4cf7d55be1b0f100959cffc4f802cd",
+      "sizeBytes": 30089,
       "downloadUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/woodblock.zip",
       "previewUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/previews/woodblock_preview.ogg"
     },
@@ -248,8 +248,8 @@
         "keys"
       ],
       "file": "piano.zip",
-      "sha256": "41ea1662ffccbb517302c502f69e8c7ef228010e3fb58a9f6c96c62648519270",
-      "sizeBytes": 30014,
+      "sha256": "1940682c6910b8fdff9e9a7e12c0ba6a94962a0974db11003c6865e04a9fc4d0",
+      "sizeBytes": 30022,
       "downloadUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/piano.zip",
       "previewUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/previews/piano_preview.ogg"
     },
@@ -271,8 +271,8 @@
         "pluck"
       ],
       "file": "acoustic-pluck.zip",
-      "sha256": "b88842faf10bc33fb6d493f806cbdbc2698999aa615201d51f166d10f46209fc",
-      "sizeBytes": 31686,
+      "sha256": "7aaff6fe92b6a44e95435aca59f5b043e45cd0ee3664ce8621e9017c004fe20a",
+      "sizeBytes": 31683,
       "downloadUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/acoustic-pluck.zip",
       "previewUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/previews/acoustic-pluck_preview.ogg"
     },
@@ -294,7 +294,7 @@
         "drum"
       ],
       "file": "folk-drum.zip",
-      "sha256": "5f82bd5879742c35a60bd11c93e2270359d62826e37496855728e59c9f33849f",
+      "sha256": "e1615faa7722eb84e84d2995a17c5b2eec86dca51b00d6d876001ae616aa3071",
       "sizeBytes": 29959,
       "downloadUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/folk-drum.zip",
       "previewUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/previews/folk-drum_preview.ogg"
@@ -317,8 +317,8 @@
         "drum"
       ],
       "file": "resonant-drum.zip",
-      "sha256": "4bd5ba5ee88ecb38b925712f0f42142c75f995ebdb5300c3f21f52124f60ebd0",
-      "sizeBytes": 29543,
+      "sha256": "b8f60b1474357fe80ec44806e2cc8ba75a2608787731eb6c690724a8cd712369",
+      "sizeBytes": 29533,
       "downloadUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/resonant-drum.zip",
       "previewUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/previews/resonant-drum_preview.ogg"
     },
@@ -340,8 +340,8 @@
         "tines"
       ],
       "file": "kalimba.zip",
-      "sha256": "a8e755ada8cc887591f46632ca15b26a258f52ef85ccf647565f3651e3ab2a96",
-      "sizeBytes": 30265,
+      "sha256": "4b0f299654f2aa79eb3172f12fd739c88c5a6b7182b7050f01787fa3becf2f2e",
+      "sizeBytes": 30272,
       "downloadUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/kalimba.zip",
       "previewUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/previews/kalimba_preview.ogg"
     },
@@ -363,10 +363,154 @@
         "acoustic"
       ],
       "file": "pizzicato.zip",
-      "sha256": "ed5658043f0fb8314c0acf62852879f382d51f9df976f4702c549308f7f2a173",
-      "sizeBytes": 30498,
+      "sha256": "ade411479653bff6a7a160a874382e43c49692e19f2f62ca55b5fa9ae04a416f",
+      "sizeBytes": 30499,
       "downloadUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/pizzicato.zip",
       "previewUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/previews/pizzicato_preview.ogg"
+    },
+    {
+      "schemaVersion": 1,
+      "id": "dev.leantype.sounds.soft-pudding-synth",
+      "name": "Soft Pudding (Synth)",
+      "summary": "Procedurally recreated soft dampened tap from v4.1.8.",
+      "versionCode": 1,
+      "versionName": "1.0.0",
+      "author": "LeanType Sound Lab",
+      "license": "CC0-1.0",
+      "minAppVersionCode": 1,
+      "defaultMasterVolume": 0.85,
+      "preview": "audio/keypress_default_1.ogg",
+      "tags": [
+        "custom",
+        "procedural",
+        "restored",
+        "soft"
+      ],
+      "file": "soft-pudding-synth.zip",
+      "sha256": "2d6e8744a70cc2ed124e6a72f54c0c71a9aeb7a2d1497d52377481284021d030",
+      "sizeBytes": 17024,
+      "downloadUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/soft-pudding-synth.zip",
+      "previewUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/previews/soft-pudding-synth_preview.ogg"
+    },
+    {
+      "schemaVersion": 1,
+      "id": "dev.leantype.sounds.muted-marshmallow",
+      "name": "Muted Marshmallow",
+      "summary": "Ultra-dead, heavy sub-bass thud. Extremely soft.",
+      "versionCode": 1,
+      "versionName": "1.0.0",
+      "author": "LeanType Sound Lab",
+      "license": "CC0-1.0",
+      "minAppVersionCode": 1,
+      "defaultMasterVolume": 0.85,
+      "preview": "audio/keypress_default_1.ogg",
+      "tags": [
+        "soft",
+        "custom",
+        "procedural",
+        "thud"
+      ],
+      "file": "muted-marshmallow.zip",
+      "sha256": "6490f5cb59b237757ee07bd0f8720db110de1e84c5f0872d97a56429bc7350ec",
+      "sizeBytes": 16888,
+      "downloadUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/muted-marshmallow.zip",
+      "previewUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/previews/muted-marshmallow_preview.ogg"
+    },
+    {
+      "schemaVersion": 1,
+      "id": "dev.leantype.sounds.felted-thock",
+      "name": "Felted Thock",
+      "summary": "Classic dampened enthusiast keyboard sound.",
+      "versionCode": 1,
+      "versionName": "1.0.0",
+      "author": "LeanType Sound Lab",
+      "license": "CC0-1.0",
+      "minAppVersionCode": 1,
+      "defaultMasterVolume": 0.85,
+      "preview": "audio/keypress_default_1.ogg",
+      "tags": [
+        "soft",
+        "custom",
+        "procedural",
+        "thock"
+      ],
+      "file": "felted-thock.zip",
+      "sha256": "b33e310f3bbf4315b94b40685da19b4c8b3fc1e7815943aba3264acd72f693e4",
+      "sizeBytes": 18027,
+      "downloadUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/felted-thock.zip",
+      "previewUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/previews/felted-thock_preview.ogg"
+    },
+    {
+      "schemaVersion": 1,
+      "id": "dev.leantype.sounds.membrane-squish",
+      "name": "Membrane Squish",
+      "summary": "Retro rubber dome office keyboard feel.",
+      "versionCode": 1,
+      "versionName": "1.0.0",
+      "author": "LeanType Sound Lab",
+      "license": "CC0-1.0",
+      "minAppVersionCode": 1,
+      "defaultMasterVolume": 0.85,
+      "preview": "audio/keypress_default_1.ogg",
+      "tags": [
+        "soft",
+        "custom",
+        "procedural",
+        "retro"
+      ],
+      "file": "membrane-squish.zip",
+      "sha256": "1f9d6e14048976bbf78f13c93d16448ada22a7ac2e7da5f0fd25c6fcba823efc",
+      "sizeBytes": 17122,
+      "downloadUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/membrane-squish.zip",
+      "previewUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/previews/membrane-squish_preview.ogg"
+    },
+    {
+      "schemaVersion": 1,
+      "id": "dev.leantype.sounds.cork-tap",
+      "name": "Cork Tap",
+      "summary": "Earthy, dry tap on soft wood or cork.",
+      "versionCode": 1,
+      "versionName": "1.0.0",
+      "author": "LeanType Sound Lab",
+      "license": "CC0-1.0",
+      "minAppVersionCode": 1,
+      "defaultMasterVolume": 0.85,
+      "preview": "audio/keypress_default_1.ogg",
+      "tags": [
+        "soft",
+        "custom",
+        "procedural",
+        "organic"
+      ],
+      "file": "cork-tap.zip",
+      "sha256": "46f3fcee25f84108bb16163a3aaae20b75dd73fcd488f03a7d316927ec039cca",
+      "sizeBytes": 17767,
+      "downloadUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/cork-tap.zip",
+      "previewUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/previews/cork-tap_preview.ogg"
+    },
+    {
+      "schemaVersion": 1,
+      "id": "dev.leantype.sounds.velvet-whisper",
+      "name": "Velvet Whisper",
+      "summary": "Airy, ASMR-style quiet tap with smooth release.",
+      "versionCode": 1,
+      "versionName": "1.0.0",
+      "author": "LeanType Sound Lab",
+      "license": "CC0-1.0",
+      "minAppVersionCode": 1,
+      "defaultMasterVolume": 0.85,
+      "preview": "audio/keypress_default_1.ogg",
+      "tags": [
+        "soft",
+        "custom",
+        "procedural",
+        "asmr"
+      ],
+      "file": "velvet-whisper.zip",
+      "sha256": "ae5123eb4846aed64a6252daf7cc937f050623501e264c328c136b37d414d4b5",
+      "sizeBytes": 17924,
+      "downloadUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/velvet-whisper.zip",
+      "previewUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/previews/velvet-whisper_preview.ogg"
     }
   ]
 }
