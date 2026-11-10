@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "id": "dev.leantype.sounds.razer-green",
+  "name": "Razer Green",
+  "summary": "Crisp clicky tactile Razer Green switch sound.",
+  "versionCode": 1,
+  "versionName": "1.0.0",
+  "author": "Monkeytype (ported to LeanType)",
+  "license": "CC0-1.0",
+  "minAppVersionCode": 1,
+  "defaultMasterVolume": 0.85,
+  "preview": "audio/keypress_default_1.wav",
+  "tags": [
+    "mechanical",
+    "clicky",
+    "tactile",
+    "razer"
+  ],
+  "sounds": {
+    "keypress.default": {
+      "files": [
+        "audio/keypress_default_1.wav",
+        "audio/keypress_default_2.wav",
+        "audio/keypress_default_3.wav",
+        "audio/keypress_default_4.wav",
+        "audio/keypress_default_5.wav",
+        "audio/keypress_default_6.wav",
+        "audio/keypress_default_7.wav",
+        "audio/keypress_default_8.wav",
+        "audio/keypress_default_9.wav",
+        "audio/keypress_default_10.wav"
+      ],
+      "mode": "random",
+      "volume": 1.0
+    }
+  }
+}
