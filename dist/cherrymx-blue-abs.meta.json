@@ -1,0 +1,23 @@
+{
+  "id": "dev.leantype.sounds.cherrymx-blue-abs",
+  "name": "Cherry MX Blue (ABS)",
+  "summary": "Iconic clicky tactile Cherry MX Blue switch on ABS keycaps.",
+  "author": "Monkeytype (ported to LeanType)",
+  "license": "GPL-3.0",
+  "versionCode": 1,
+  "versionName": "1.0.0",
+  "minAppVersionCode": 1,
+  "tags": [
+    "mechanical",
+    "clicky",
+    "tactile",
+    "cherry",
+    "cherry-mx",
+    "abs"
+  ],
+  "file": "cherrymx-blue-abs.zip",
+  "sha256": "859560b7dc0c6e6c05aea32e9cb5a74405e46b62501a76fb6aa4d5730a4d6a43",
+  "sizeBytes": 136141,
+  "downloadUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/cherrymx-blue-abs.zip",
+  "previewFile": "audio/keypress_default_1.ogg"
+}

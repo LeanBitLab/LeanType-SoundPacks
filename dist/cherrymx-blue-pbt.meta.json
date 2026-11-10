@@ -1,0 +1,23 @@
+{
+  "id": "dev.leantype.sounds.cherrymx-blue-pbt",
+  "name": "Cherry MX Blue (PBT)",
+  "summary": "Iconic clicky tactile Cherry MX Blue switch on PBT keycaps.",
+  "author": "Monkeytype (ported to LeanType)",
+  "license": "GPL-3.0",
+  "versionCode": 1,
+  "versionName": "1.0.0",
+  "minAppVersionCode": 1,
+  "tags": [
+    "mechanical",
+    "clicky",
+    "tactile",
+    "cherry",
+    "cherry-mx",
+    "pbt"
+  ],
+  "file": "cherrymx-blue-pbt.zip",
+  "sha256": "59c8b7082493fd37b2e3c2ffa96ecce62c79b28cc0a388db653daf9a6b736f43",
+  "sizeBytes": 138967,
+  "downloadUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/cherrymx-blue-pbt.zip",
+  "previewFile": "audio/keypress_default_1.ogg"
+}

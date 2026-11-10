@@ -1,0 +1,21 @@
+{
+  "id": "dev.leantype.sounds.nk-creams",
+  "name": "NK Creams",
+  "summary": "Smooth, creamy linear switch sound from NK Creams.",
+  "author": "Monkeytype (ported to LeanType)",
+  "license": "GPL-3.0",
+  "versionCode": 1,
+  "versionName": "1.0.0",
+  "minAppVersionCode": 1,
+  "tags": [
+    "mechanical",
+    "linear",
+    "creamy",
+    "nk"
+  ],
+  "file": "nk-creams.zip",
+  "sha256": "a583f22928c35f51403119b6eed38201a26e28b8b76e646416eecbcc558ec6c3",
+  "sizeBytes": 82092,
+  "downloadUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/nk-creams.zip",
+  "previewFile": "audio/keypress_default_1.ogg"
+}

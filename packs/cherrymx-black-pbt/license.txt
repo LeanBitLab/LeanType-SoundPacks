@@ -1,0 +1,9 @@
+Audio samples in this pack were recorded from real mechanical keyboard switches
+and are sourced from the open-source Monkeytype project.
+
+Source project: Monkeytype (https://github.com/monkeytypegame/monkeytype)
+Source license: GNU General Public License v3.0 (GPL-3.0)
+                https://www.gnu.org/licenses/gpl-3.0.html
+
+These audio files are redistributed under the terms of the GPL-3.0 license.
+A full copy of the GPL-3.0 license text is available at the URL above.
