@@ -1,0 +1,21 @@
+{
+  "id": "dev.leantype.sounds.razer-green",
+  "name": "Razer Green",
+  "summary": "Crisp clicky tactile Razer Green switch sound.",
+  "author": "Monkeytype (ported to LeanType)",
+  "license": "GPL-3.0",
+  "versionCode": 1,
+  "versionName": "1.0.0",
+  "minAppVersionCode": 1,
+  "tags": [
+    "mechanical",
+    "clicky",
+    "tactile",
+    "razer"
+  ],
+  "file": "razer-green.zip",
+  "sha256": "7f60f1efc768e603b2de32dddfb79c0b139988ab8054357c5d037b114ded0f68",
+  "sizeBytes": 177648,
+  "downloadUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/razer-green.zip",
+  "previewFile": "audio/keypress_default_1.ogg"
+}

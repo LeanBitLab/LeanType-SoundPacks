@@ -1,0 +1,21 @@
+{
+  "id": "dev.leantype.sounds.akko-lavenders",
+  "name": "Akko Lavenders",
+  "summary": "Light, satisfying linear switch sound from Akko Lavenders.",
+  "author": "Monkeytype (ported to LeanType)",
+  "license": "GPL-3.0",
+  "versionCode": 1,
+  "versionName": "1.0.0",
+  "minAppVersionCode": 1,
+  "tags": [
+    "mechanical",
+    "linear",
+    "akko",
+    "lavender"
+  ],
+  "file": "akko-lavenders.zip",
+  "sha256": "a3d723dbb91b318f83cc30e2d77ccfc7ef3d86810109c317dfe9d095e8bd456e",
+  "sizeBytes": 110287,
+  "downloadUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/akko-lavenders.zip",
+  "previewFile": "audio/keypress_default_1.ogg"
+}

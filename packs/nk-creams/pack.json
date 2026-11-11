@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "id": "dev.leantype.sounds.nk-creams",
+  "name": "NK Creams",
+  "summary": "Smooth, creamy linear switch sound from NK Creams.",
+  "versionCode": 1,
+  "versionName": "1.0.0",
+  "author": "Monkeytype (ported to LeanType)",
+  "license": "GPL-3.0",
+  "minAppVersionCode": 1,
+  "defaultMasterVolume": 0.85,
+  "preview": "audio/keypress_default_1.ogg",
+  "tags": [
+    "mechanical",
+    "linear",
+    "creamy",
+    "nk"
+  ],
+  "sounds": {
+    "keypress.default": {
+      "files": [
+        "audio/keypress_default_1.ogg",
+        "audio/keypress_default_2.ogg",
+        "audio/keypress_default_3.ogg",
+        "audio/keypress_default_4.ogg",
+        "audio/keypress_default_5.ogg",
+        "audio/keypress_default_6.ogg"
+      ],
+      "mode": "random",
+      "volume": 1.0
+    }
+  }
+}

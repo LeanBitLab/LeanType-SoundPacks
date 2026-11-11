@@ -30,6 +30,14 @@ Official sound packs repository and creator guide for [LeanType Keyboard](https:
 | **Membrane Squish** | `dev.leantype.sounds.membrane-squish` | Retro rubber dome office keyboard feel |
 | **Cork Tap** | `dev.leantype.sounds.cork-tap` | Earthy, dry tap on soft wood or cork |
 | **Velvet Whisper** | `dev.leantype.sounds.velvet-whisper` | Airy, ASMR-style quiet tap with smooth release |
+| **NK Creams** | `dev.leantype.sounds.nk-creams` | Smooth, creamy linear switch recording |
+| **Akko Lavenders** | `dev.leantype.sounds.akko-lavenders` | Light, satisfying linear switch recording |
+| **Cherry MX Black (ABS)** | `dev.leantype.sounds.cherrymx-black-abs` | Classic heavy linear switch on ABS keycaps |
+| **Cherry MX Black (PBT)** | `dev.leantype.sounds.cherrymx-black-pbt` | Classic heavy linear switch on PBT keycaps |
+| **Cherry MX Blue (ABS)** | `dev.leantype.sounds.cherrymx-blue-abs` | Iconic clicky tactile switch on ABS keycaps |
+| **Cherry MX Blue (PBT)** | `dev.leantype.sounds.cherrymx-blue-pbt` | Iconic clicky tactile switch on PBT keycaps |
+| **Cherry MX Brown (PBT)** | `dev.leantype.sounds.cherrymx-brown-pbt` | Soft tactile bump switch on PBT keycaps |
+| **Razer Green** | `dev.leantype.sounds.razer-green` | Crisp clicky tactile switch recording |
 
 ---
 

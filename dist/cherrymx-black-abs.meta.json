@@ -1,0 +1,22 @@
+{
+  "id": "dev.leantype.sounds.cherrymx-black-abs",
+  "name": "Cherry MX Black (ABS)",
+  "summary": "Classic heavy linear Cherry MX Black switch on ABS keycaps.",
+  "author": "Monkeytype (ported to LeanType)",
+  "license": "GPL-3.0",
+  "versionCode": 1,
+  "versionName": "1.0.0",
+  "minAppVersionCode": 1,
+  "tags": [
+    "mechanical",
+    "linear",
+    "cherry",
+    "cherry-mx",
+    "abs"
+  ],
+  "file": "cherrymx-black-abs.zip",
+  "sha256": "ddd39628a9c2b4e8ceb8a12721b13bcef16dd1a70e93353f39a89dbf7f3603fe",
+  "sizeBytes": 136274,
+  "downloadUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/cherrymx-black-abs.zip",
+  "previewFile": "audio/keypress_default_1.ogg"
+}

@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "id": "dev.leantype.sounds.cherrymx-brown-pbt",
+  "name": "Cherry MX Brown (PBT)",
+  "summary": "Soft tactile bump Cherry MX Brown switch on PBT keycaps.",
+  "versionCode": 1,
+  "versionName": "1.0.0",
+  "author": "Monkeytype (ported to LeanType)",
+  "license": "GPL-3.0",
+  "minAppVersionCode": 1,
+  "defaultMasterVolume": 0.85,
+  "preview": "audio/keypress_default_1.ogg",
+  "tags": [
+    "mechanical",
+    "tactile",
+    "cherry",
+    "cherry-mx",
+    "pbt"
+  ],
+  "sounds": {
+    "keypress.default": {
+      "files": [
+        "audio/keypress_default_1.ogg",
+        "audio/keypress_default_2.ogg",
+        "audio/keypress_default_3.ogg",
+        "audio/keypress_default_4.ogg",
+        "audio/keypress_default_5.ogg",
+        "audio/keypress_default_6.ogg",
+        "audio/keypress_default_7.ogg",
+        "audio/keypress_default_8.ogg",
+        "audio/keypress_default_9.ogg",
+        "audio/keypress_default_10.ogg"
+      ],
+      "mode": "random",
+      "volume": 1.0
+    }
+  }
+}

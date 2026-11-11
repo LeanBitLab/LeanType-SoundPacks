@@ -1,0 +1,22 @@
+{
+  "id": "dev.leantype.sounds.cherrymx-black-pbt",
+  "name": "Cherry MX Black (PBT)",
+  "summary": "Classic heavy linear Cherry MX Black switch on PBT keycaps.",
+  "author": "Monkeytype (ported to LeanType)",
+  "license": "GPL-3.0",
+  "versionCode": 1,
+  "versionName": "1.0.0",
+  "minAppVersionCode": 1,
+  "tags": [
+    "mechanical",
+    "linear",
+    "cherry",
+    "cherry-mx",
+    "pbt"
+  ],
+  "file": "cherrymx-black-pbt.zip",
+  "sha256": "1357a28b25eef4fdf2c486b14756ad95ed2335ca7ce694e223fdcca3300dcf80",
+  "sizeBytes": 108160,
+  "downloadUrl": "https://raw.githubusercontent.com/LeanBitLab/LeanType-SoundPacks/main/dist/cherrymx-black-pbt.zip",
+  "previewFile": "audio/keypress_default_1.ogg"
+}
